@@ -22,9 +22,8 @@ from pathlib import Path
 
 from ...nuclide import Nuclide
 from ...quantities import Uncertain
-from ._util import data_lines
+from ._util import data_lines, parse_file, require_file, z_blocks
 from ._util import is_number as _is_number
-from ._util import parse_file, require_file, z_blocks
 
 __all__ = [
     "GDREntry",
@@ -41,7 +40,7 @@ class GDREntry:
     """One giant-dipole-resonance fit for one nuclide."""
 
     nuclide: Nuclide
-    kind: str                      # "exp-SLO", "exp-MLO", or "theor"
+    kind: str  # "exp-SLO", "exp-MLO", or "theor"
     #: (energy MeV, width MeV, peak cross-section mb or None) per Lorentzian.
     peaks: tuple[tuple[Uncertain, Uncertain, Uncertain | None], ...]
     #: Deformation-driven splitting parameter eta (theory table only).
@@ -67,8 +66,10 @@ def parse_gdr_exp(text: str, kind: str) -> dict[tuple[int, int], tuple[GDREntry,
         tokens = line.split()
         if not _is_number(tokens[0]):
             continue
-        if pending is not None and len(tokens) in (3, 6) and all(
-            _is_number(t) for t in tokens
+        if (
+            pending is not None
+            and len(tokens) in (3, 6)
+            and all(_is_number(t) for t in tokens)
         ):
             # the continuation line: errors under E1 CS1 W1 [E2 CS2 W2]
             key, entry = pending
@@ -77,14 +78,21 @@ def parse_gdr_exp(text: str, kind: str) -> dict[tuple[int, int], tuple[GDREntry,
             for i, (e, w, cs) in enumerate(entry.peaks):
                 chunk = errs[3 * i : 3 * i + 3]
                 de, dcs, dw = chunk + [None] * (3 - len(chunk))
-                peaks.append((
-                    Uncertain(e.value, de, de, raw=e.raw),
-                    Uncertain(w.value, dw, dw, raw=w.raw),
-                    None if cs is None else Uncertain(cs.value, dcs, dcs, raw=cs.raw),
-                ))
+                peaks.append(
+                    (
+                        Uncertain(e.value, de, de, raw=e.raw),
+                        Uncertain(w.value, dw, dw, raw=w.raw),
+                        None
+                        if cs is None
+                        else Uncertain(cs.value, dcs, dcs, raw=cs.raw),
+                    )
+                )
             table[key][-1] = GDREntry(
-                nuclide=entry.nuclide, kind=entry.kind, peaks=tuple(peaks),
-                fit_range_mev=entry.fit_range_mev, reference=entry.reference,
+                nuclide=entry.nuclide,
+                kind=entry.kind,
+                peaks=tuple(peaks),
+                fit_range_mev=entry.fit_range_mev,
+                reference=entry.reference,
             )
             pending = None
             continue
@@ -97,14 +105,19 @@ def parse_gdr_exp(text: str, kind: str) -> dict[tuple[int, int], tuple[GDREntry,
         peaks = []
         for i in range(0, len(numbers), 3):
             e, cs, w = (float(n) for n in numbers[i : i + 3])
-            peaks.append((
-                Uncertain(e, raw=f"{e} MeV"),
-                Uncertain(w, raw=f"{w} MeV"),
-                Uncertain(cs, raw=f"{cs} mb"),
-            ))
+            peaks.append(
+                (
+                    Uncertain(e, raw=f"{e} MeV"),
+                    Uncertain(w, raw=f"{w} MeV"),
+                    Uncertain(cs, raw=f"{cs} mb"),
+                )
+            )
         entry = GDREntry(
-            nuclide=Nuclide(z, a), kind=kind, peaks=tuple(peaks),
-            fit_range_mev=(emin, emax), reference=reference,
+            nuclide=Nuclide(z, a),
+            kind=kind,
+            peaks=tuple(peaks),
+            fit_range_mev=(emin, emax),
+            reference=reference,
         )
         table.setdefault((z, a), []).append(entry)
         pending = ((z, a), entry)
@@ -120,9 +133,14 @@ def parse_gdr_theor(text: str) -> dict[tuple[int, int], GDREntry]:
         eta, e1, w1, e2, w2 = (float(t) for t in tokens[3:8])
         peaks = [(Uncertain(e1, raw=f"{e1} MeV"), Uncertain(w1, raw=f"{w1} MeV"), None)]
         if (e2, w2) != (e1, w1):
-            peaks.append((Uncertain(e2, raw=f"{e2} MeV"), Uncertain(w2, raw=f"{w2} MeV"), None))
+            peaks.append(
+                (Uncertain(e2, raw=f"{e2} MeV"), Uncertain(w2, raw=f"{w2} MeV"), None)
+            )
         table[(z, a)] = GDREntry(
-            nuclide=Nuclide(z, a), kind="theor", peaks=tuple(peaks), eta=eta,
+            nuclide=Nuclide(z, a),
+            kind="theor",
+            peaks=tuple(peaks),
+            eta=eta,
         )
     return table
 
@@ -145,7 +163,9 @@ def load_gdr(path: Path, nuclide: Nuclide) -> tuple[GDREntry, ...]:
     return tuple(out)
 
 
-def _parse_gsf_file(text: str) -> dict[tuple[int, int], tuple[tuple[float, float], ...]]:
+def _parse_gsf_file(
+    text: str,
+) -> dict[tuple[int, int], tuple[tuple[float, float], ...]]:
     table: dict[tuple[int, int], tuple[tuple[float, float], ...]] = {}
     for z, a, _header, body in z_blocks(text, lambda line: line.startswith(" Z=")):
         rows = []

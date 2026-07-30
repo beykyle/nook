@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from functools import cached_property
-from collections.abc import Mapping
 from typing import Any, Callable, Iterator, Sequence, overload
 
 from .nuclide import Nuclide
@@ -50,9 +50,7 @@ class Level:
     properties: Mapping[str, str] = field(
         default_factory=dict, repr=False, compare=False
     )
-    raw: Mapping[str, Any] = field(
-        default_factory=dict, repr=False, compare=False
-    )
+    raw: Mapping[str, Any] = field(default_factory=dict, repr=False, compare=False)
 
     @property
     def energy_kev(self) -> float | None:
@@ -92,9 +90,7 @@ class Gamma:
     properties: Mapping[str, str] = field(
         default_factory=dict, repr=False, compare=False
     )
-    raw: Mapping[str, Any] = field(
-        default_factory=dict, repr=False, compare=False
-    )
+    raw: Mapping[str, Any] = field(default_factory=dict, repr=False, compare=False)
 
     @property
     def energy_kev(self) -> float | None:
@@ -164,9 +160,11 @@ class LevelScheme:  # noqa: D101
     def below(self, energy_kev: float) -> "LevelScheme":
         """Levels at or below ``energy_kev`` (floating levels are dropped)."""
         return self.filter(
-            lambda lv: lv.energy_kev is not None
-            and not lv.is_floating
-            and lv.energy_kev <= energy_kev
+            lambda lv: (
+                lv.energy_kev is not None
+                and not lv.is_floating
+                and lv.energy_kev <= energy_kev
+            )
         )
 
     def with_known_jpi(self, allow_tentative: bool = True) -> "LevelScheme":
@@ -180,9 +178,7 @@ class LevelScheme:  # noqa: D101
 
         return self.filter(keep)
 
-    def complete_up_to(
-        self, allow_tentative: bool = True
-    ) -> "LevelScheme":
+    def complete_up_to(self, allow_tentative: bool = True) -> "LevelScheme":
         """Truncate at the first level lacking a firm ``E``, ``J`` and ``pi``.
 
         This reproduces the usual RIPL-style "discrete level cutoff" used
@@ -207,8 +203,10 @@ class LevelScheme:  # noqa: D101
     def isomers(self, min_half_life_s: float = 1e-9) -> "LevelScheme":
         """Levels living longer than ``min_half_life_s``."""
         return self.filter(
-            lambda lv: lv.half_life.seconds.value is not None
-            and lv.half_life.seconds.value >= min_half_life_s
+            lambda lv: (
+                lv.half_life.seconds.value is not None
+                and lv.half_life.seconds.value >= min_half_life_s
+            )
         )
 
     def seen_in(self, pattern: str) -> "LevelScheme":

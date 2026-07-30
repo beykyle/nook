@@ -21,7 +21,6 @@ from nook.compare import _jpi_agree, _match_levels
 from nook.model import Level
 from nook.quantities import Uncertain, parse_spin_parity
 from nook.sources.ripl3 import parse_levels_file
-
 from test_ripl3 import FIXTURE, needs_mirror
 
 DATA = Path(__file__).parent / "data"
@@ -47,8 +46,7 @@ def _shifted(levels, delta_kev):
         replace(
             lv,
             energy=Uncertain(
-                value=(lv.energy.value or 0.0)
-                + (delta_kev if lv.energy.value else 0.0)
+                value=(lv.energy.value or 0.0) + (delta_kev if lv.energy.value else 0.0)
             ),
         )
         for lv in levels
@@ -99,8 +97,11 @@ def test_identical_pairs_are_not_significant(mg24):
     pairs, _, _ = _match_levels(mg24.levels, mg24.levels, tolerance_kev=2.0)
     for a, b in pairs:
         m = compare.LevelMatch(
-            a=a, b=b, delta_kev=0.0,
-            combined_sigma_kev=None, jpi_agree=None,
+            a=a,
+            b=b,
+            delta_kev=0.0,
+            combined_sigma_kev=None,
+            jpi_agree=None,
         )
         assert not m.significant
 
@@ -211,7 +212,9 @@ def test_characterization_frozen(name):
 def test_cli_compare_masses_json(capsys):
     from nook.cli import main
 
-    assert main(["compare", "24Mg", "--what", "masses", "--no-livechart", "--json"]) == 0
+    assert (
+        main(["compare", "24Mg", "--what", "masses", "--no-livechart", "--json"]) == 0
+    )
     payload = json.loads(capsys.readouterr().out)
     assert "ripl-exp" in payload
 

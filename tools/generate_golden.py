@@ -129,8 +129,11 @@ def capture_chain_digests(chain: Path, workdir: Path) -> dict:
                 continue
             prints.append(
                 level_fingerprint(
-                    lv.energy.val, lv.energy.pm, nudel_jpi(lv),
-                    lv.xref, bool(lv.metastable),
+                    lv.energy.val,
+                    lv.energy.pm,
+                    nudel_jpi(lv),
+                    lv.xref,
+                    bool(lv.metastable),
                 )
             )
         key = f"{nucleus[0]}/{nucleus[1]}/{dsid}"
@@ -165,8 +168,12 @@ def capture_characterization(excerpt: Path, decay_excerpt: Path) -> dict:
             for k, v in scheme.metadata["Q"].items()
         },
         "gammas": [
-            {"energy": g.energy_kev, "start": g.start_index, "end": g.end_index,
-             "mult": g.multipolarity}
+            {
+                "energy": g.energy_kev,
+                "start": g.start_index,
+                "end": g.end_index,
+                "mult": g.multipolarity,
+            }
             for g in scheme.gammas
         ],
         "decay": {
@@ -178,9 +185,12 @@ def capture_characterization(excerpt: Path, decay_excerpt: Path) -> dict:
                 "NB": decay.normalization.feeding.value,
             },
             "feedings": [
-                {"kind": f.kind, "level": f.level_index,
-                 "intensity": f.intensity.value,
-                 "log_ft": f.log_ft.value if f.log_ft else None}
+                {
+                    "kind": f.kind,
+                    "level": f.level_index,
+                    "intensity": f.intensity.value,
+                    "log_ft": f.log_ft.value if f.log_ft else None,
+                }
                 for f in decay.feedings
             ],
             "total_feeding": decay.total_feeding().value,
@@ -211,7 +221,7 @@ def main(argv: list[str]) -> int:
             "oracle_version": nudel_version(),
             "oracle_url": "https://github.com/op3/nudel",
             "oracle_licence": "GPL-3.0-or-later (used only to generate this "
-                              "file; not a dependency of nook)",
+            "file; not a dependency of nook)",
             "chain_file": chain.name,
             "chain_checksum": file_checksum(chain),
             "generated": date.today().isoformat(),
@@ -225,9 +235,13 @@ def main(argv: list[str]) -> int:
     out.write_text(json.dumps(payload, indent=1, sort_keys=True))
     print(f"wrote {out.relative_to(REPO)} ({out.stat().st_size} bytes)")
     print(f"  excerpt levels from nudel : {len(payload['excerpt']['levels'])}")
-    print(f"  held back as divergent    : {len(payload['excerpt']['known_divergences'])}")
+    print(
+        f"  held back as divergent    : {len(payload['excerpt']['known_divergences'])}"
+    )
     print(f"  chain datasets digested   : {len(payload['chain']['datasets'])}")
-    print(f"  chain levels excluded     : {payload['chain']['levels_excluded_as_divergent']}")
+    print(
+        f"  chain levels excluded     : {payload['chain']['levels_excluded_as_divergent']}"
+    )
 
     char = capture_characterization(
         data / "ensdf180_excerpt.ensdf", data / "ensdf180_decay_excerpt.ensdf"

@@ -146,10 +146,26 @@ class ENSDFDataset:
 
 #: ENSDF's ASCII markup for Greek letters and super/subscripts.
 _GREEK = {
-    "a": "\u03b1", "b": "\u03b2", "g": "\u03b3", "d": "\u03b4", "e": "\u03b5",
-    "n": "\u03bd", "p": "\u03c0", "m": "\u03bc", "s": "\u03c3", "t": "\u03c4",
-    "w": "\u03c9", "x": "\u03be", "l": "\u03bb", "r": "\u03c1", "h": "\u03b7",
-    "D": "\u0394", "G": "\u0393", "S": "\u03a3", "W": "\u03a9", "P": "\u03a0",
+    "a": "\u03b1",
+    "b": "\u03b2",
+    "g": "\u03b3",
+    "d": "\u03b4",
+    "e": "\u03b5",
+    "n": "\u03bd",
+    "p": "\u03c0",
+    "m": "\u03bc",
+    "s": "\u03c3",
+    "t": "\u03c4",
+    "w": "\u03c9",
+    "x": "\u03be",
+    "l": "\u03bb",
+    "r": "\u03c1",
+    "h": "\u03b7",
+    "D": "\u0394",
+    "G": "\u0393",
+    "S": "\u03a3",
+    "W": "\u03a9",
+    "P": "\u03a0",
 }
 
 
@@ -270,7 +286,9 @@ class _BlockRecords:
 
     levels: list[tuple[str, list[str]]] = dc_field(default_factory=list)
     gammas: list[tuple[str, int, list[str]]] = dc_field(default_factory=list)
-    feedings: list[tuple[str, str, int | None, list[str]]] = dc_field(default_factory=list)
+    feedings: list[tuple[str, str, int | None, list[str]]] = dc_field(
+        default_factory=list
+    )
     parents: list[str] = dc_field(default_factory=list)
     normalization: str | None = None
     q_records: list[str] = dc_field(default_factory=list)
@@ -431,7 +449,9 @@ def _parse_level_record(
         if not text:
             return None
         parts = text.split()
-        return parse_value_with_uncertainty(parts[0], parts[1] if len(parts) > 1 else "")
+        return parse_value_with_uncertainty(
+            parts[0], parts[1] if len(parts) > 1 else ""
+        )
 
     return Level(
         index=index,
@@ -472,9 +492,7 @@ _Q_FIELDS = (
 def _parse_q_record(line: str) -> dict[str, object]:
     """Decode the Q record: separation energies and decay Q-values, in keV."""
     out: dict[str, object] = {
-        name: parse_value_with_uncertainty(
-            _field(line, a, b), _field(line, c, d)
-        )
+        name: parse_value_with_uncertainty(_field(line, a, b), _field(line, c, d))
         for name, a, b, c, d in _Q_FIELDS
     }
     out["reference"] = _field(line, 56, 80)
@@ -492,7 +510,9 @@ def _parse_parent_record(line: str) -> Parent:
         energy=parse_value_with_uncertainty(_field(line, 10, 19), _field(line, 20, 21)),
         spin_parity=parse_spin_parity(_field(line, 22, 39)),
         half_life=parse_half_life(_field(line, 40, 49), _field(line, 50, 55)),
-        q_value=parse_value_with_uncertainty(_field(line, 65, 74), _field(line, 75, 76)),
+        q_value=parse_value_with_uncertainty(
+            _field(line, 65, 74), _field(line, 75, 76)
+        ),
         ionisation=_field(line, 77, 80) or None,
         raw={"record": line.rstrip()},
     )
@@ -620,9 +640,7 @@ def place_gammas(scheme: LevelScheme, tolerance_kev: float = 1.0) -> LevelScheme
 
     placed = []
     for gamma in scheme.gammas:
-        start_e = (
-            None if gamma.start_index is None else energies.get(gamma.start_index)
-        )
+        start_e = None if gamma.start_index is None else energies.get(gamma.start_index)
         if start_e is None or gamma.energy_kev is None:
             placed.append(gamma)
             continue
@@ -672,9 +690,13 @@ def place_gammas_in(scheme: DecayScheme) -> DecayScheme:
 
 
 @lru_cache(maxsize=8)
-def _parse_chain_cached(path: str, fingerprint: tuple[int, int]) -> tuple[ENSDFDataset, ...]:
+def _parse_chain_cached(
+    path: str, fingerprint: tuple[int, int]
+) -> tuple[ENSDFDataset, ...]:
     del fingerprint  # part of the cache key only
-    return tuple(parse_ensdf_text(Path(path).read_text(encoding="utf-8", errors="replace")))
+    return tuple(
+        parse_ensdf_text(Path(path).read_text(encoding="utf-8", errors="replace"))
+    )
 
 
 def _parse_chain(path: Path) -> tuple[ENSDFDataset, ...]:
@@ -714,7 +736,9 @@ class ENSDFFileSource:
 
     def datasets(self, nuclide: Nuclide) -> list[ENSDFDataset]:
         """Every dataset for ``nuclide`` in its mass chain file."""
-        return [ds for ds in _parse_chain(self._file_for(nuclide)) if ds.nuclide == nuclide]
+        return [
+            ds for ds in _parse_chain(self._file_for(nuclide)) if ds.nuclide == nuclide
+        ]
 
     def references(self, mass_number: int) -> dict[str, str]:
         """NSR keynumber -> citation, from the mass chain's REFERENCES dataset."""
@@ -749,7 +773,9 @@ class ENSDFFileSource:
             matches = [ds for ds in found if needle in ds.dsid.upper()]
             if not matches:
                 names = ", ".join(sorted({ds.dsid for ds in found}))
-                raise LookupError(f"no dataset matching {dataset!r}; available: {names}")
+                raise LookupError(
+                    f"no dataset matching {dataset!r}; available: {names}"
+                )
             chosen = matches[0]
         scheme = chosen.to_scheme()
         return place_gammas(scheme) if place else scheme

@@ -18,7 +18,15 @@ from pathlib import Path
 
 from ...nuclide import Nuclide, symbol_to_z
 from ...quantities import Uncertain
-from ._util import MEV_TO_KEV, data_lines, field, float_field, int_field, parse_file, require_file
+from ._util import (
+    MEV_TO_KEV,
+    data_lines,
+    field,
+    float_field,
+    int_field,
+    parse_file,
+    require_file,
+)
 
 __all__ = ["ResonanceEntry", "load_resonances", "parse_resonances"]
 
@@ -27,12 +35,12 @@ __all__ = ["ResonanceEntry", "load_resonances", "parse_resonances"]
 class ResonanceEntry:
     """Average resonance parameters for one target nuclide and one wave."""
 
-    nuclide: Nuclide          # the *target*; Bn refers to the compound system
-    wave: int                 # 0 (s) or 1 (p)
+    nuclide: Nuclide  # the *target*; Bn refers to the compound system
+    wave: int  # 0 (s) or 1 (p)
     target_spin: float | None
-    bn_kev: float | None      # neutron binding of the compound nucleus
-    spacing_kev: Uncertain = Uncertain(None)      # D0 or D1
-    strength_1e4: Uncertain = Uncertain(None)     # S0 or S1
+    bn_kev: float | None  # neutron binding of the compound nucleus
+    spacing_kev: Uncertain = Uncertain(None)  # D0 or D1
+    strength_1e4: Uncertain = Uncertain(None)  # S0 or S1
     gamma_width_mev_milli: Uncertain = Uncertain(None)  # <Gamma_gamma>, meV
     #: True when D0 was estimated from D1 rather than measured (the ``*``).
     estimated: bool = False

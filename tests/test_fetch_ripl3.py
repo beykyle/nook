@@ -45,7 +45,9 @@ def test_transient_http_error_keeps_the_partial_download(tmp_path, monkeypatch):
     part.write_bytes(b"half of it")
 
     monkeypatch.setattr(
-        urllib.request, "urlopen", lambda request, timeout: (_ for _ in ()).throw(_http_error(503))
+        urllib.request,
+        "urlopen",
+        lambda request, timeout: (_ for _ in ()).throw(_http_error(503)),
     )
     with pytest.raises(RuntimeError, match="HTTP 503"):
         fetch_ripl3.download("masses/masses.tgz", target)

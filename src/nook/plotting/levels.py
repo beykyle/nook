@@ -31,8 +31,7 @@ __all__ = ["plot_level_scheme", "plot_band_scheme"]
 
 def _sorted_levels(scheme, limit: int | None, max_energy: float | None):
     levels = [
-        lv for lv in scheme.levels
-        if lv.energy_kev is not None and not lv.is_floating
+        lv for lv in scheme.levels if lv.energy_kev is not None and not lv.is_floating
     ]
     if max_energy is not None:
         levels = [lv for lv in levels if lv.energy_kev <= max_energy]
@@ -47,7 +46,8 @@ def _intensity_widths(gammas, lo: float = 0.6, hi: float = 3.4):
     the strongest transition invisible, and a log map exaggerates the weakest.
     """
     values = [
-        g.intensity.value for g in gammas
+        g.intensity.value
+        for g in gammas
         if g.intensity is not None and g.intensity.value
     ]
     if not values:
@@ -90,7 +90,8 @@ def plot_level_scheme(
         left, right = 0.16, 0.60
 
         gammas = [
-            g for g in scheme.gammas
+            g
+            for g in scheme.gammas
             if show_gammas and g.start_index is not None and g.end_index is not None
         ]
         drawn = {lv.index for lv in levels}
@@ -108,11 +109,15 @@ def plot_level_scheme(
             colour = PALETTE.rule if gamma.multipolarity is None else PALETTE.ink
             ax.annotate(
                 "",
-                xy=(x, bottom), xytext=(x, top),
+                xy=(x, bottom),
+                xytext=(x, top),
                 arrowprops={
-                    "arrowstyle": "-|>", "color": colour,
+                    "arrowstyle": "-|>",
+                    "color": colour,
                     "linewidth": widths[id(gamma)],
-                    "shrinkA": 0, "shrinkB": 0, "mutation_scale": 9,
+                    "shrinkA": 0,
+                    "shrinkB": 0,
+                    "mutation_scale": 9,
                     "alpha": 0.85,
                 },
             )
@@ -125,33 +130,79 @@ def plot_level_scheme(
             colour = PALETTE.for_parity(
                 level.spin_parity.unique.parity if level.spin_parity.unique else None
             )
-            ax.plot([left, right], [energy, energy], color=colour, linewidth=1.6,
-                    solid_capstyle="butt", zorder=3)
+            ax.plot(
+                [left, right],
+                [energy, energy],
+                color=colour,
+                linewidth=1.6,
+                solid_capstyle="butt",
+                zorder=3,
+            )
             if level.metastable:
-                ax.plot([left, right], [energy, energy], color=PALETTE.isomer,
-                        linewidth=4.5, alpha=0.35, solid_capstyle="butt", zorder=2)
+                ax.plot(
+                    [left, right],
+                    [energy, energy],
+                    color=PALETTE.isomer,
+                    linewidth=4.5,
+                    alpha=0.35,
+                    solid_capstyle="butt",
+                    zorder=2,
+                )
 
             # leader line wherever the label had to move off its level
             if abs(y - energy) > span * 0.004:
-                ax.plot([left - 0.055, left - 0.015], [y, energy],
-                        color=PALETTE.rule, linewidth=0.5, zorder=1)
-            ax.text(left - 0.06, y, f"{energy:.1f}", va="center", ha="right",
-                    fontsize=8, color=PALETTE.ink, family="sans-serif",
-                    bbox=HALO, zorder=5)
+                ax.plot(
+                    [left - 0.055, left - 0.015],
+                    [y, energy],
+                    color=PALETTE.rule,
+                    linewidth=0.5,
+                    zorder=1,
+                )
+            ax.text(
+                left - 0.06,
+                y,
+                f"{energy:.1f}",
+                va="center",
+                ha="right",
+                fontsize=8,
+                color=PALETTE.ink,
+                family="sans-serif",
+                bbox=HALO,
+                zorder=5,
+            )
 
             label = jpi_label(level.spin_parity)
             if label:
-                ax.text(right + 0.03, y, label, va="center", ha="left",
-                        fontsize=10, color=colour, bbox=HALO, zorder=5)
+                ax.text(
+                    right + 0.03,
+                    y,
+                    label,
+                    va="center",
+                    ha="left",
+                    fontsize=10,
+                    color=colour,
+                    bbox=HALO,
+                    zorder=5,
+                )
             life = half_life_label(level.half_life)
             if life:
                 emphasis = PALETTE.isomer if level.metastable else PALETTE.unknown
-                ax.text(right + 0.22, y, life, va="center", ha="left",
-                        fontsize=8, color=emphasis, family="sans-serif",
-                        bbox=HALO, zorder=5)
+                ax.text(
+                    right + 0.22,
+                    y,
+                    life,
+                    va="center",
+                    ha="left",
+                    fontsize=8,
+                    color=emphasis,
+                    family="sans-serif",
+                    bbox=HALO,
+                    zorder=5,
+                )
 
-        ax.set_ylim(levels[0].energy_kev - 0.06 * span,
-                    levels[-1].energy_kev + 0.06 * span)
+        ax.set_ylim(
+            levels[0].energy_kev - 0.06 * span, levels[-1].energy_kev + 0.06 * span
+        )
         ax.set_xlim(0, 1)
         ax.set_xticks([])
         for side in ("top", "right", "bottom"):
@@ -160,8 +211,15 @@ def plot_level_scheme(
         ax.set_ylabel("energy (keV)")
         ax.set_title(title or f"{scheme.nuclide}", loc="left", pad=14)
         if scheme.dataset:
-            ax.text(0, 1.005, scheme.dataset, transform=ax.transAxes,
-                    fontsize=8, color=PALETTE.unknown, family="sans-serif")
+            ax.text(
+                0,
+                1.005,
+                scheme.dataset,
+                transform=ax.transAxes,
+                fontsize=8,
+                color=PALETTE.unknown,
+                family="sans-serif",
+            )
     return fig, ax
 
 
@@ -213,26 +271,55 @@ def plot_band_scheme(
                 energy = level.energy_kev
                 parity = (
                     level.spin_parity.unique.parity
-                    if level.spin_parity.unique else None
+                    if level.spin_parity.unique
+                    else None
                 )
                 colour = PALETTE.for_parity(parity)
-                ax.plot([x0, x1], [energy, energy], color=colour, linewidth=1.7,
-                        solid_capstyle="butt", zorder=3)
+                ax.plot(
+                    [x0, x1],
+                    [energy, energy],
+                    color=colour,
+                    linewidth=1.7,
+                    solid_capstyle="butt",
+                    zorder=3,
+                )
                 if level.metastable:
-                    ax.plot([x0, x1], [energy, energy], color=PALETTE.isomer,
-                            linewidth=5, alpha=0.35, solid_capstyle="butt", zorder=2)
+                    ax.plot(
+                        [x0, x1],
+                        [energy, energy],
+                        color=PALETTE.isomer,
+                        linewidth=5,
+                        alpha=0.35,
+                        solid_capstyle="butt",
+                        zorder=2,
+                    )
                 spin = jpi_label(level.spin_parity)
                 if spin:
                     if abs(y - energy) > extent * 0.006:
-                        ax.plot([x1 + 0.01, x1 + 0.03], [energy, y],
-                                color=PALETTE.rule, linewidth=0.5, zorder=1)
-                    ax.text(x1 + 0.04, y, spin, va="center", ha="left",
-                            fontsize=9, color=colour, bbox=HALO, zorder=5)
+                        ax.plot(
+                            [x1 + 0.01, x1 + 0.03],
+                            [energy, y],
+                            color=PALETTE.rule,
+                            linewidth=0.5,
+                            zorder=1,
+                        )
+                    ax.text(
+                        x1 + 0.04,
+                        y,
+                        spin,
+                        va="center",
+                        ha="left",
+                        fontsize=9,
+                        color=colour,
+                        bbox=HALO,
+                        zorder=5,
+                    )
 
             # in-band cascade
             energies = {lv.index: lv.energy_kev for lv in levels}
             inband = [
-                g for g in band.gammas
+                g
+                for g in band.gammas
                 if g.start_index in energies and g.end_index in energies
             ]
             widths = _intensity_widths(inband, 0.5, 2.4)
@@ -242,9 +329,12 @@ def plot_band_scheme(
                     xy=(x0 + column_width * 0.30, energies[gamma.end_index]),
                     xytext=(x0 + column_width * 0.30, energies[gamma.start_index]),
                     arrowprops={
-                        "arrowstyle": "-|>", "color": PALETTE.ink,
+                        "arrowstyle": "-|>",
+                        "color": PALETTE.ink,
                         "linewidth": widths[id(gamma)],
-                        "shrinkA": 0, "shrinkB": 0, "mutation_scale": 8,
+                        "shrinkA": 0,
+                        "shrinkB": 0,
+                        "mutation_scale": 8,
                         "alpha": 0.75,
                     },
                 )
@@ -255,14 +345,37 @@ def plot_band_scheme(
         for x, label, head in captions:
             definition = scheme.band_definition(label) or ""
             title_text = definition.split(".")[0] if definition else f"band {label}"
-            ax.text(x, -0.055 * top, title_text, ha="center", va="top",
-                    fontsize=9, bbox=HALO, zorder=5)
+            ax.text(
+                x,
+                -0.055 * top,
+                title_text,
+                ha="center",
+                va="top",
+                fontsize=9,
+                bbox=HALO,
+                zorder=5,
+            )
             if "Configuration=" in definition:
                 config = definition.split("Configuration=")[1].split()[0]
-                ax.text(x, -0.105 * top, config, ha="center", va="top",
-                        fontsize=8, color=PALETTE.unknown, bbox=HALO, zorder=5)
-            ax.plot([x], [head.energy_kev], marker="o", markersize=3,
-                    color=PALETTE.ink, zorder=4)
+                ax.text(
+                    x,
+                    -0.105 * top,
+                    config,
+                    ha="center",
+                    va="top",
+                    fontsize=8,
+                    color=PALETTE.unknown,
+                    bbox=HALO,
+                    zorder=5,
+                )
+            ax.plot(
+                [x],
+                [head.energy_kev],
+                marker="o",
+                markersize=3,
+                color=PALETTE.ink,
+                zorder=4,
+            )
 
         ax.set_xlim(-0.25, len(labels) * gap - gap + column_width + 0.55)
         ax.set_ylim(-0.20 * top, top * 1.06)
@@ -270,6 +383,5 @@ def plot_band_scheme(
         for side in ("top", "right", "bottom"):
             ax.spines[side].set_visible(False)
         ax.set_ylabel("energy (keV)")
-        ax.set_title(title or f"{scheme.nuclide} rotational bands",
-                     loc="left", pad=14)
+        ax.set_title(title or f"{scheme.nuclide} rotational bands", loc="left", pad=14)
     return fig, ax

@@ -11,8 +11,8 @@ comparable across datasets once scaled by ``NR * BR`` or ``NB * BR``.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 from collections.abc import Mapping
+from dataclasses import dataclass, field
 from typing import Any, ClassVar, Iterator
 
 from .model import LevelScheme
@@ -32,9 +32,7 @@ class Parent:
     half_life: HalfLife = field(default_factory=HalfLife)
     q_value: Uncertain = field(default_factory=lambda: Uncertain(None))
     ionisation: str | None = None
-    raw: Mapping[str, Any] = field(
-        default_factory=dict, repr=False, compare=False
-    )
+    raw: Mapping[str, Any] = field(default_factory=dict, repr=False, compare=False)
 
     def __str__(self) -> str:
         e = self.energy.value
@@ -47,14 +45,12 @@ class Parent:
 class Normalization:
     """An ``N`` record: multipliers onto an absolute per-decay scale."""
 
-    photon: Uncertain | None = None       # NR
-    transition: Uncertain | None = None   # NT
-    branching: Uncertain | None = None    # BR
-    feeding: Uncertain | None = None      # NB
-    delayed: Uncertain | None = None      # NP
-    raw: Mapping[str, Any] = field(
-        default_factory=dict, repr=False, compare=False
-    )
+    photon: Uncertain | None = None  # NR
+    transition: Uncertain | None = None  # NT
+    branching: Uncertain | None = None  # BR
+    feeding: Uncertain | None = None  # NB
+    delayed: Uncertain | None = None  # NP
+    raw: Mapping[str, Any] = field(default_factory=dict, repr=False, compare=False)
 
     def factor_for(self, kind: str = "photon") -> Uncertain | None:
         """The multiplier taking ``kind`` onto a per-parent-decay scale.
@@ -89,8 +85,10 @@ class Normalization:
         bits = [
             f"{name}={value}"
             for name, value in (
-                ("NR", self.photon), ("NT", self.transition),
-                ("BR", self.branching), ("NB", self.feeding),
+                ("NR", self.photon),
+                ("NT", self.transition),
+                ("BR", self.branching),
+                ("NB", self.feeding),
                 ("NP", self.delayed),
             )
             if value is not None and value.value is not None
@@ -133,9 +131,7 @@ class Feeding:
     properties: Mapping[str, str] = field(
         default_factory=dict, repr=False, compare=False
     )
-    raw: Mapping[str, Any] = field(
-        default_factory=dict, repr=False, compare=False
-    )
+    raw: Mapping[str, Any] = field(default_factory=dict, repr=False, compare=False)
 
     #: ENSDF particle symbols on ``D`` records.
     _PARTICLES: ClassVar[dict[str, str]] = {"N": "neutron", "P": "proton", "A": "alpha"}
@@ -144,15 +140,23 @@ class Feeding:
     def label(self) -> str:
         particle = self._PARTICLES.get((self.particle or "").upper(), self.particle)
         return {
-            "B": "\u03b2-", "E": "\u03b5/\u03b2+", "A": "\u03b1",
+            "B": "\u03b2-",
+            "E": "\u03b5/\u03b2+",
+            "A": "\u03b1",
             "D": f"delayed {particle or 'particle'}",
         }.get(self.kind, self.kind)
 
     def __str__(self) -> str:
-        bits = [f"{self.label} \u2192 level {self.level_index}", f"I = {self.intensity}"]
+        bits = [
+            f"{self.label} \u2192 level {self.level_index}",
+            f"I = {self.intensity}",
+        ]
         if self.log_ft is not None and self.log_ft.value is not None:
             bits.append(f"log ft = {self.log_ft}")
-        if self.hindrance_factor is not None and self.hindrance_factor.value is not None:
+        if (
+            self.hindrance_factor is not None
+            and self.hindrance_factor.value is not None
+        ):
             bits.append(f"HF = {self.hindrance_factor}")
         return "  ".join(bits)
 

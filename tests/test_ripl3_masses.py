@@ -6,7 +6,6 @@ import pytest
 
 import nook
 from nook.sources.ripl3 import clear_ripl_cache
-
 from test_ripl3 import needs_mirror
 
 # Verbatim rows from the mirrored files (formats (2i4,1x,a2,1x,i1,...)).

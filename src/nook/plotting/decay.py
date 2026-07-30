@@ -55,8 +55,10 @@ def _feeding_rows(scheme, max_levels: int):
         level = scheme.levels.level_by_index(feeding.level_index)
         if level is None or level.energy_kev is None or level.is_floating:
             continue
-        value = absolute.value if absolute.value is not None else (
-            feeding.intensity.value or 0.0
+        value = (
+            absolute.value
+            if absolute.value is not None
+            else (feeding.intensity.value or 0.0)
         )
         rows.append((level, feeding, absolute, value))
     rows.sort(key=lambda row: -row[3])
@@ -103,7 +105,8 @@ def plot_decay_scheme(
     top = max(q_value, ceiling * 1.15, 1.0)
 
     logft_values = [
-        row[1].log_ft.value for row in rows
+        row[1].log_ft.value
+        for row in rows
         if row[1].log_ft is not None and row[1].log_ft.value is not None
     ]
     if annotate is None:
@@ -125,19 +128,44 @@ def plot_decay_scheme(
         ax.set_ylim(-top * 0.15, top * 1.18)
 
         # -- parent ------------------------------------------------------
-        ax.plot([parent_x0, parent_x1], [q_value, q_value],
-                color=PALETTE.ink, linewidth=2.0, solid_capstyle="butt")
+        ax.plot(
+            [parent_x0, parent_x1],
+            [q_value, q_value],
+            color=PALETTE.ink,
+            linewidth=2.0,
+            solid_capstyle="butt",
+        )
         if parent is not None and parent.nuclide is not None:
-            name = f"$^{{{parent.nuclide.a}}}$much".replace("much", parent.nuclide.symbol)
-            ax.text(parent_x0, q_value + top * 0.085, name, fontsize=13,
-                    ha="left", bbox=HALO, zorder=6)
-            meta = "   ".join(
-                bit for bit in (jpi_label(parent.spin_parity),
-                                half_life_label(parent.half_life)) if bit
+            name = f"$^{{{parent.nuclide.a}}}$much".replace(
+                "much", parent.nuclide.symbol
             )
-            meta_text = ax.text(parent_x0, q_value + top * 0.028, meta,
-                                fontsize=9, ha="left", color=PALETTE.unknown,
-                                bbox=HALO, zorder=6)
+            ax.text(
+                parent_x0,
+                q_value + top * 0.085,
+                name,
+                fontsize=13,
+                ha="left",
+                bbox=HALO,
+                zorder=6,
+            )
+            meta = "   ".join(
+                bit
+                for bit in (
+                    jpi_label(parent.spin_parity),
+                    half_life_label(parent.half_life),
+                )
+                if bit
+            )
+            meta_text = ax.text(
+                parent_x0,
+                q_value + top * 0.028,
+                meta,
+                fontsize=9,
+                ha="left",
+                color=PALETTE.unknown,
+                bbox=HALO,
+                zorder=6,
+            )
             if parent.q_value.value:
                 # the parent's Jpi and half-life sit just above; how far they
                 # reach depends on the data, so measure before placing Q
@@ -146,11 +174,17 @@ def plot_decay_scheme(
                     parent_x1 + 0.015,
                     ax.transData.inverted().transform((edge, 0))[0] + 0.02,
                 )
-                deferred_q = ax.text(
-                    q_x, q_value, f"$Q$ = {parent.q_value.value:.0f} keV",
-                    fontsize=8, va="center", ha="left",
-                    color=PALETTE.unknown, family="sans-serif",
-                    bbox=HALO, zorder=6,
+                ax.text(
+                    q_x,
+                    q_value,
+                    f"$Q$ = {parent.q_value.value:.0f} keV",
+                    fontsize=8,
+                    va="center",
+                    ha="left",
+                    color=PALETTE.unknown,
+                    family="sans-serif",
+                    bbox=HALO,
+                    zorder=6,
                 )
 
         movable: list = []
@@ -174,12 +208,14 @@ def plot_decay_scheme(
         labelled: set[int] = set()
         if logft_values:
             ranked = sorted(
-                (r for r in rows
-                 if r[1].log_ft is not None and r[1].log_ft.value is not None),
+                (
+                    r
+                    for r in rows
+                    if r[1].log_ft is not None and r[1].log_ft.value is not None
+                ),
                 key=lambda r: r[1].log_ft.value,
             )
-            for candidate in (ranked[0], ranked[-1],
-                              max(rows, key=lambda r: r[3])):
+            for candidate in (ranked[0], ranked[-1], max(rows, key=lambda r: r[3])):
                 if len(labelled) < annotate:
                     labelled.add(id(candidate[1]))
         for row in sorted(rows, key=lambda r: -r[3]):
@@ -213,15 +249,25 @@ def plot_decay_scheme(
             # arrival energy increase together, the diagonals fan without
             # crossing, which right-angled routing could not manage.
             drop = parent_x1 + 0.02 + 0.26 * (lane / max(len(by_energy) - 1, 1))
-            ax.plot([parent_x1, drop], [q_value, q_value],
-                    color=colour, linewidth=width, solid_capstyle="butt")
+            ax.plot(
+                [parent_x1, drop],
+                [q_value, q_value],
+                color=colour,
+                linewidth=width,
+                solid_capstyle="butt",
+            )
             ax.annotate(
                 "",
-                xy=(left, level.energy_kev), xytext=(drop, q_value),
+                xy=(left, level.energy_kev),
+                xytext=(drop, q_value),
                 arrowprops={
-                    "arrowstyle": "-|>", "color": colour,
-                    "linewidth": width, "shrinkA": 0, "shrinkB": 1,
-                    "mutation_scale": 9, "connectionstyle": "arc3,rad=0",
+                    "arrowstyle": "-|>",
+                    "color": colour,
+                    "linewidth": width,
+                    "shrinkA": 0,
+                    "shrinkB": 1,
+                    "mutation_scale": 9,
+                    "connectionstyle": "arc3,rad=0",
                 },
             )
             if id(feeding) not in labelled:
@@ -235,12 +281,20 @@ def plot_decay_scheme(
             # height is the separated one, clamped so it stays on the visible
             # run; the halo covers whatever it still crosses.
             fraction = spread.get(id(feeding), 0.62)
-            movable.append(ax.text(
-                drop + fraction * (left - drop),
-                q_value + fraction * (level.energy_kev - q_value),
-                note, fontsize=8, ha="center", va="center",
-                color=PALETTE.ink, family="sans-serif", bbox=HALO, zorder=6,
-            ))
+            movable.append(
+                ax.text(
+                    drop + fraction * (left - drop),
+                    q_value + fraction * (level.energy_kev - q_value),
+                    note,
+                    fontsize=8,
+                    ha="center",
+                    va="center",
+                    color=PALETTE.ink,
+                    family="sans-serif",
+                    bbox=HALO,
+                    zorder=6,
+                )
+            )
 
         # -- daughter levels ---------------------------------------------
         by_index = {row[0].index: row[0] for row in rows}
@@ -259,17 +313,37 @@ def plot_decay_scheme(
                 level.spin_parity.unique.parity if level.spin_parity.unique else None
             )
             colour = PALETTE.for_parity(parity)
-            ax.plot([left, right], [level.energy_kev, level.energy_kev],
-                    color=colour, linewidth=1.6, solid_capstyle="butt", zorder=3)
+            ax.plot(
+                [left, right],
+                [level.energy_kev, level.energy_kev],
+                color=colour,
+                linewidth=1.6,
+                solid_capstyle="butt",
+                zorder=3,
+            )
             if abs(y - level.energy_kev) > top * 0.004:
-                ax.plot([right + 0.005, right + 0.014], [level.energy_kev, y],
-                        color=PALETTE.rule, linewidth=0.5, zorder=1)
+                ax.plot(
+                    [right + 0.005, right + 0.014],
+                    [level.energy_kev, y],
+                    color=PALETTE.rule,
+                    linewidth=0.5,
+                    zorder=1,
+                )
             spin = jpi_label(level.spin_parity)
             if spin:
-                spin_texts.append(ax.text(
-                    right + 0.018, y, spin, fontsize=9, va="center",
-                    ha="left", color=colour, bbox=HALO, zorder=5,
-                ))
+                spin_texts.append(
+                    ax.text(
+                        right + 0.018,
+                        y,
+                        spin,
+                        fontsize=9,
+                        va="center",
+                        ha="left",
+                        color=colour,
+                        bbox=HALO,
+                        zorder=5,
+                    )
+                )
             energy_labels.append((y, f"{level.energy_kev:.1f}"))
 
         # The spin column's width depends on the data -- "(2,3+,1-)" is far
@@ -278,15 +352,22 @@ def plot_decay_scheme(
         energy_x = right + 0.085
         if spin_texts:
             renderer = _renderer(fig)
-            widest = max(
-                t.get_window_extent(renderer).x1 for t in spin_texts
-            )
+            widest = max(t.get_window_extent(renderer).x1 for t in spin_texts)
             in_data = ax.transData.inverted().transform((widest, 0))[0]
             energy_x = max(energy_x, in_data + 0.022)
         for y, label in energy_labels:
-            ax.text(energy_x, y, label, fontsize=8, va="center", ha="left",
-                    color=PALETTE.unknown, family="sans-serif", bbox=HALO,
-                    zorder=5)
+            ax.text(
+                energy_x,
+                y,
+                label,
+                fontsize=8,
+                va="center",
+                ha="left",
+                color=PALETTE.unknown,
+                family="sans-serif",
+                bbox=HALO,
+                zorder=5,
+            )
 
         # -- gammas between drawn levels ---------------------------------
         if show_gammas:
@@ -298,15 +379,24 @@ def plot_decay_scheme(
                         xy=(left + 0.06, positions[gamma.end_index]),
                         xytext=(left + 0.06, positions[gamma.start_index]),
                         arrowprops={
-                            "arrowstyle": "-|>", "color": PALETTE.ink,
-                            "linewidth": 0.8, "shrinkA": 0, "shrinkB": 0,
-                            "mutation_scale": 8, "alpha": 0.55,
+                            "arrowstyle": "-|>",
+                            "color": PALETTE.ink,
+                            "linewidth": 0.8,
+                            "shrinkA": 0,
+                            "shrinkB": 0,
+                            "mutation_scale": 8,
+                            "alpha": 0.55,
                         },
                     )
 
         daughter = scheme.nuclide
-        ax.text(right, -top * 0.10, f"$^{{{daughter.a}}}${daughter.symbol}",
-                fontsize=13, ha="right")
+        ax.text(
+            right,
+            -top * 0.10,
+            f"$^{{{daughter.a}}}${daughter.symbol}",
+            fontsize=13,
+            ha="right",
+        )
 
         # a slim scale for the darkness channel
         if len(logft_values) > annotate:
@@ -314,8 +404,7 @@ def plot_decay_scheme(
             from matplotlib.colors import Normalize
 
             mappable = ScalarMappable(Normalize(low, high), ramp)
-            bar = fig.colorbar(mappable, ax=ax, fraction=0.022, pad=0.02,
-                               aspect=28)
+            bar = fig.colorbar(mappable, ax=ax, fraction=0.022, pad=0.02, aspect=28)
             bar.set_label("log $ft$", fontsize=9)
             bar.outline.set_visible(False)  # type: ignore[operator]
             bar.ax.invert_yaxis()
@@ -326,9 +415,13 @@ def plot_decay_scheme(
         # widen the pixel gaps that were measured against the wider one.
         renderer = _renderer(fig)
         rightmost = max(
-            (ax.transData.inverted().transform(
-                (t.get_window_extent(renderer).x1, 0))[0]
-             for t in ax.texts if t.get_text().strip()),
+            (
+                ax.transData.inverted().transform(
+                    (t.get_window_extent(renderer).x1, 0)
+                )[0]
+                for t in ax.texts
+                if t.get_text().strip()
+            ),
             default=1.0,
         )
         ax.set_xlim(0, min(1.35, rightmost + 0.03))
@@ -337,9 +430,15 @@ def plot_decay_scheme(
             ax.spines[side].set_visible(False)
         ax.set_ylabel("energy (keV)")
         ax.set_title(title or scheme.dsid, loc="left", pad=16)
-        ax.text(0, 1.005,
-                "intensity per 100 parent decays" if absolute_scale
-                else "relative intensity (no N record)",
-                transform=ax.transAxes, fontsize=8, color=PALETTE.unknown,
-                family="sans-serif")
+        ax.text(
+            0,
+            1.005,
+            "intensity per 100 parent decays"
+            if absolute_scale
+            else "relative intensity (no N record)",
+            transform=ax.transAxes,
+            fontsize=8,
+            color=PALETTE.unknown,
+            family="sans-serif",
+        )
     return fig, ax

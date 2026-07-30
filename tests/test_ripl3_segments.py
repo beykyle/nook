@@ -8,7 +8,6 @@ import nook
 from nook.sources.ripl3.fission import _parse_empirical
 from nook.sources.ripl3.gamma import parse_gdr_exp, parse_gdr_theor
 from nook.sources.ripl3.resonances import parse_resonances
-
 from test_ripl3 import needs_mirror
 
 # Rows cut verbatim from the mirrored files.
@@ -177,8 +176,8 @@ def test_real_mirror_resonances_gdr_fission_gsf():
 @needs_mirror
 def test_gdr_exp_files_parse_completely():
     source = nook.Ripl3Source()
-    from nook.sources.ripl3.gamma import parse_gdr_exp as parse
     from nook.sources.ripl3._util import read_file
+    from nook.sources.ripl3.gamma import parse_gdr_exp as parse
 
     for shape in ("SLO", "MLO"):
         file = source.path / "gamma" / f"gdr-parameters&errors-exp-{shape}.dat"

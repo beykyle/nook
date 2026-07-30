@@ -35,14 +35,14 @@ __all__ = [
 class Palette:
     """Named colours. Parity is the organising binary."""
 
-    ink: str = "#14181F"        # level lines, text, axes
+    ink: str = "#14181F"  # level lines, text, axes
     paper: str = "#FFFFFF"
-    rule: str = "#C9CDD3"       # hairlines, guides
-    positive: str = "#A6321F"   # pi = +
-    negative: str = "#1F5673"   # pi = -
-    unknown: str = "#8A8F98"    # parity unassigned
-    isomer: str = "#C98A2B"     # metastable states
-    wash: str = "#F2F4F6"       # band backing tint
+    rule: str = "#C9CDD3"  # hairlines, guides
+    positive: str = "#A6321F"  # pi = +
+    negative: str = "#1F5673"  # pi = -
+    unknown: str = "#8A8F98"  # parity unassigned
+    isomer: str = "#C98A2B"  # metastable states
+    wash: str = "#F2F4F6"  # band backing tint
 
     def for_parity(self, parity: int | None) -> str:
         if parity == 1:
@@ -162,9 +162,18 @@ def jpi_label(spin_parity, max_alternatives: int = 3) -> str:
 
 
 _TIME_STEPS = (
-    (3.15576e16, "Gy"), (3.15576e13, "My"), (3.15576e7, "y"), (86400.0, "d"),
-    (3600.0, "h"), (60.0, "min"), (1.0, "s"), (1e-3, "ms"), (1e-6, "\u00b5s"),
-    (1e-9, "ns"), (1e-12, "ps"), (1e-15, "fs"),
+    (3.15576e16, "Gy"),
+    (3.15576e13, "My"),
+    (3.15576e7, "y"),
+    (86400.0, "d"),
+    (3600.0, "h"),
+    (60.0, "min"),
+    (1.0, "s"),
+    (1e-3, "ms"),
+    (1e-6, "\u00b5s"),
+    (1e-9, "ns"),
+    (1e-12, "ps"),
+    (1e-15, "fs"),
 )
 
 
@@ -192,8 +201,12 @@ def half_life_label(half_life) -> str:
     return rf"${operator}{seconds:.2g}$ s"
 
 
-def dodge(values: Sequence[float], min_gap: float,
-          low: float | None = None, high: float | None = None) -> list[float]:
+def dodge(
+    values: Sequence[float],
+    min_gap: float,
+    low: float | None = None,
+    high: float | None = None,
+) -> list[float]:
     """Nudge label positions apart while preserving their order.
 
     Level schemes routinely put two states a few keV apart -- 1607.97 and
@@ -242,11 +255,13 @@ def separate_labels(fig, ax, texts: Sequence, max_passes: int = 40) -> int:
     renderer = fig.canvas.get_renderer()  # type: ignore[attr-defined]
 
     for _ in range(max_passes):
-        boxes = [(t, t.get_window_extent(renderer)) for t in texts if t.get_text().strip()]
+        boxes = [
+            (t, t.get_window_extent(renderer)) for t in texts if t.get_text().strip()
+        ]
         clashes = [
             (a, b)
             for i, (a, box_a) in enumerate(boxes)
-            for b, box_b in boxes[i + 1:]
+            for b, box_b in boxes[i + 1 :]
             if box_a.overlaps(box_b)
         ]
         if not clashes:
@@ -256,9 +271,7 @@ def separate_labels(fig, ax, texts: Sequence, max_passes: int = 40) -> int:
             box_b = second.get_window_extent(renderer)
             # move the upper one up and the lower one down, half the overlap each
             shift = (min(box_a.y1, box_b.y1) - max(box_a.y0, box_b.y0)) / 2 + 1.5
-            upper, lower = (
-                (first, second) if box_a.y0 > box_b.y0 else (second, first)
-            )
+            upper, lower = (first, second) if box_a.y0 > box_b.y0 else (second, first)
             for text, direction in ((upper, +1), (lower, -1)):
                 x, y = ax.transData.transform(text.get_position())
                 moved = ax.transData.inverted().transform((x, y + direction * shift))
@@ -269,6 +282,6 @@ def separate_labels(fig, ax, texts: Sequence, max_passes: int = 40) -> int:
     return sum(
         1
         for i, (_, box_a) in enumerate(boxes)
-        for _, box_b in boxes[i + 1:]
+        for _, box_b in boxes[i + 1 :]
         if box_a.overlaps(box_b)
     )

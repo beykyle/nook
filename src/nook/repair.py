@@ -38,13 +38,15 @@ from typing import Callable, Sequence
 from .survey import NuclideSummary, loops_touching, mass_surface_loops
 
 
-def _with(state: NuclideSummary, quantity: str, value: float,
-          mark: bool = False) -> NuclideSummary:
+def _with(
+    state: NuclideSummary, quantity: str, value: float, mark: bool = False
+) -> NuclideSummary:
     """A copy of state with one Q-value changed."""
     fields: dict = {quantity: value}
     if mark:
         fields["repaired"] = tuple(sorted({*state.repaired, quantity}))
     return replace(state, **fields)
+
 
 __all__ = ["TRANSFORMS", "Repair", "repair"]
 
@@ -126,9 +128,7 @@ def repair(
     accepted: list[Repair] = []
     for _ in range(max_passes):
         loops = mass_surface_loops(table)
-        suspect = {
-            key for loop in loops if not loop.closed for key, _ in loop.terms
-        }
+        suspect = {key for loop in loops if not loop.closed for key, _ in loop.terms}
         if not suspect:
             break
 
@@ -156,30 +156,39 @@ def repair(
                     # breaks agreement elsewhere is not a repair
                     was = {
                         (loop.name, loop.anchor.nuclide)
-                        for loop in local if loop.closed
+                        for loop in local
+                        if loop.closed
                     }
                     now = {
                         (loop.name, loop.anchor.nuclide)
-                        for loop in after if loop.closed
+                        for loop in after
+                        if loop.closed
                     }
                     if was - now:
                         continue
                     newly = [
-                        loop for loop in after
-                        if loop.closed
-                        and (loop.name, loop.anchor.nuclide) not in was
+                        loop
+                        for loop in after
+                        if loop.closed and (loop.name, loop.anchor.nuclide) not in was
                     ]
                     matching = [
-                        loop for loop in local
+                        loop
+                        for loop in local
                         if (loop.name, loop.anchor.nuclide)
                         in {(n.name, n.anchor.nuclide) for n in newly}
                     ]
                     score = (gain, penalty_base - penalty_after)
                     if best is None or score > best[0]:
                         best = (
-                            score, key, quantity, original, candidate, name,
+                            score,
+                            key,
+                            quantity,
+                            original,
+                            candidate,
+                            name,
                             max(loop.residual for loop in matching),
-                            max(loop.residual for loop in newly), gain,
+                            max(loop.residual for loop in newly),
+                            gain,
                         )
         if best is None:
             break
@@ -188,9 +197,14 @@ def repair(
         table[key] = _with(table[key], quantity, candidate, mark=True)
         accepted.append(
             Repair(
-                nuclide=table[key].nuclide, quantity=quantity, original=original,
-                corrected=candidate, transform=name, residual_before=before,
-                residual_after=after, loops_fixed=gain,
+                nuclide=table[key].nuclide,
+                quantity=quantity,
+                original=original,
+                corrected=candidate,
+                transform=name,
+                residual_before=before,
+                residual_after=after,
+                loops_fixed=gain,
             )
         )
 

@@ -15,7 +15,6 @@ which keeps the chart visually of a piece with the level schemes.
 from __future__ import annotations
 
 import math
-
 from typing import Sequence
 
 from .style import PALETTE, _require_matplotlib, figure_style
@@ -54,8 +53,14 @@ AXIS_LABELS = {
 }
 
 _DECAY_LABELS = {
-    "stable": "stable", "B-": r"$\beta^-$", "EC": r"$\varepsilon/\beta^+$",
-    "A": r"$\alpha$", "IT": "IT", "P": "$p$", "N": "$n$", "SF": "SF",
+    "stable": "stable",
+    "B-": r"$\beta^-$",
+    "EC": r"$\varepsilon/\beta^+$",
+    "A": r"$\alpha$",
+    "IT": "IT",
+    "P": "$p$",
+    "N": "$n$",
+    "SF": "SF",
 }
 
 
@@ -134,12 +139,27 @@ def plot_chart(
         for magic in MAGIC_NUMBERS:
             if magic <= max_n:
                 ax.axvline(magic + 0.5, color=PALETTE.rule, linewidth=0.7, zorder=0)
-                ax.text(magic + 0.5, -3.5, str(magic), fontsize=7, ha="center",
-                        color=PALETTE.unknown, family="sans-serif")
+                ax.text(
+                    magic + 0.5,
+                    -3.5,
+                    str(magic),
+                    fontsize=7,
+                    ha="center",
+                    color=PALETTE.unknown,
+                    family="sans-serif",
+                )
             if magic <= max_z:
                 ax.axhline(magic + 0.5, color=PALETTE.rule, linewidth=0.7, zorder=0)
-                ax.text(-3.5, magic + 0.5, str(magic), fontsize=7, va="center",
-                        ha="right", color=PALETTE.unknown, family="sans-serif")
+                ax.text(
+                    -3.5,
+                    magic + 0.5,
+                    str(magic),
+                    fontsize=7,
+                    va="center",
+                    ha="right",
+                    color=PALETTE.unknown,
+                    family="sans-serif",
+                )
 
         squares, values, edges = [], [], []
         if colour_by == "decay":
@@ -152,14 +172,26 @@ def plot_chart(
             ax.add_collection(collection)
             present = {_decay_key(s) for s in states}
             handles = [
-                Line2D([], [], marker="s", linestyle="none", markersize=7,
-                       markerfacecolor=DECAY_COLOURS[key], markeredgecolor="none",
-                       label=_DECAY_LABELS.get(key, key))
+                Line2D(
+                    [],
+                    [],
+                    marker="s",
+                    linestyle="none",
+                    markersize=7,
+                    markerfacecolor=DECAY_COLOURS[key],
+                    markeredgecolor="none",
+                    label=_DECAY_LABELS.get(key, key),
+                )
                 for key in ("stable", "B-", "EC", "A", "IT", "P", "N", "SF")
                 if key in present
             ]
-            ax.legend(handles=handles, loc="upper left", ncol=2,
-                      bbox_to_anchor=(0.01, 0.99), handletextpad=0.4)
+            ax.legend(
+                handles=handles,
+                loc="upper left",
+                ncol=2,
+                bbox_to_anchor=(0.01, 0.99),
+                handletextpad=0.4,
+            )
         else:
             for state in states:
                 value = getattr(state, colour_by, None)
@@ -167,8 +199,9 @@ def plot_chart(
                     continue
                 squares.append(Rectangle((state.n - 0.5, state.z - 0.5), 1, 1))
                 values.append(math.log10(value) if log else value)
-            collection = PatchCollection(squares, cmap=_ramp(), edgecolors="none",
-                                         zorder=2)
+            collection = PatchCollection(
+                squares, cmap=_ramp(), edgecolors="none", zorder=2
+            )
             collection.set_array(values)
             if robust and len(values) >= 5 and (vmin is None or vmax is None):
                 # Drop at least one value from each end: a 1% index rounds to
@@ -194,25 +227,43 @@ def plot_chart(
             stable = [
                 Rectangle((s.n - 0.5, s.z - 0.5), 1, 1) for s in states if s.stable
             ]
-            ax.add_collection(PatchCollection(
-                stable, facecolors="none", edgecolors=PALETTE.ink,
-                linewidths=0.45, zorder=3,
-            ))
+            ax.add_collection(
+                PatchCollection(
+                    stable,
+                    facecolors="none",
+                    edgecolors=PALETTE.ink,
+                    linewidths=0.45,
+                    zorder=3,
+                )
+            )
 
         if mark:
             wanted = {(n.z, n.a) for n in mark}
             rings = [
                 Rectangle((s.n - 0.5, s.z - 0.5), 1, 1)
-                for s in states if (s.z, s.nuclide.a) in wanted
+                for s in states
+                if (s.z, s.nuclide.a) in wanted
             ]
             if rings:
-                ax.add_collection(PatchCollection(
-                    rings, facecolors="none", edgecolors=PALETTE.isomer,
-                    linewidths=1.6, zorder=5,
-                ))
-                ax.scatter([], [], marker="s", s=46, facecolors="none",
-                           edgecolors=PALETTE.isomer, linewidths=1.6,
-                           label=mark_label)
+                ax.add_collection(
+                    PatchCollection(
+                        rings,
+                        facecolors="none",
+                        edgecolors=PALETTE.isomer,
+                        linewidths=1.6,
+                        zorder=5,
+                    )
+                )
+                ax.scatter(
+                    [],
+                    [],
+                    marker="s",
+                    s=46,
+                    facecolors="none",
+                    edgecolors=PALETTE.isomer,
+                    linewidths=1.6,
+                    label=mark_label,
+                )
                 ax.legend(loc="upper left", bbox_to_anchor=(0.01, 0.99))
 
         if label_elements:
@@ -227,8 +278,15 @@ def plot_chart(
                         symbol = _nuclide.z_to_symbol(z)
                     except ValueError:
                         continue  # beyond the named elements (HFB-14 reaches Z=120)
-                    ax.text(min(ns) - 1.6, z, symbol, fontsize=7,
-                            va="center", ha="right", color=PALETTE.ink)
+                    ax.text(
+                        min(ns) - 1.6,
+                        z,
+                        symbol,
+                        fontsize=7,
+                        va="center",
+                        ha="right",
+                        color=PALETTE.ink,
+                    )
 
         ax.set_xlim(-5, max_n + 3)
         ax.set_ylim(-5, max_z + 3)
@@ -237,6 +295,7 @@ def plot_chart(
         ax.set_ylabel("proton number $Z$")
         for side in ("top", "right"):
             ax.spines[side].set_visible(False)
-        ax.set_title(title or f"chart of nuclides ({len(states)} nuclides)",
-                     loc="left", pad=12)
+        ax.set_title(
+            title or f"chart of nuclides ({len(states)} nuclides)", loc="left", pad=12
+        )
     return fig, ax

@@ -26,8 +26,12 @@ def default_cache_dir() -> Path:
 class Cache:
     """Content-addressed key/value store over plain files."""
 
-    def __init__(self, directory: str | os.PathLike[str] | None = None, enabled: bool = True):
-        self.directory = Path(directory) if directory is not None else default_cache_dir()
+    def __init__(
+        self, directory: str | os.PathLike[str] | None = None, enabled: bool = True
+    ):
+        self.directory = (
+            Path(directory) if directory is not None else default_cache_dir()
+        )
         self.enabled = enabled
 
     def _path(self, key: str) -> Path:

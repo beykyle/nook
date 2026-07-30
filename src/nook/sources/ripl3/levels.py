@@ -37,7 +37,12 @@ from ...nuclide import Nuclide
 from ...quantities import HalfLife, JPi, SpinParity, Uncertain, parse_spin_parity
 from ._util import MEV_TO_KEV, field, float_field, int_field, parse_file, require_file
 
-__all__ = ["LevelsParam", "RiplNuclideLevels", "parse_levels_file", "parse_levels_param"]
+__all__ = [
+    "LevelsParam",
+    "RiplNuclideLevels",
+    "parse_levels_file",
+    "parse_levels_param",
+]
 
 
 @dataclass(frozen=True)
@@ -45,10 +50,10 @@ class RiplNuclideLevels:
     """One isotope's block from a per-element file, still close to the file."""
 
     nuclide: Nuclide
-    n_levels: int          # Nol
-    n_gammas: int          # Nog
-    n_complete: int        # Nmax: scheme believed complete up to this level
-    n_unique_jpi: int      # Nc: spins and parities unique up to this level
+    n_levels: int  # Nol
+    n_gammas: int  # Nog
+    n_complete: int  # Nmax: scheme believed complete up to this level
+    n_unique_jpi: int  # Nc: spins and parities unique up to this level
     sn_kev: float | None
     sp_kev: float | None
     levels: tuple[Level, ...] = ()
@@ -96,11 +101,15 @@ def _half_life(text: str) -> HalfLife:
         return HalfLife()
     value = float(text)
     if value < 0:
-        return HalfLife(seconds=Uncertain(float("inf"), raw=text), stable=True, raw=text)
+        return HalfLife(
+            seconds=Uncertain(float("inf"), raw=text), stable=True, raw=text
+        )
     return HalfLife(seconds=Uncertain(value, raw=text), raw=text)
 
 
-def _spin_parity(spin: float | None, parity: int | None, flag: str, original: str) -> SpinParity:
+def _spin_parity(
+    spin: float | None, parity: int | None, flag: str, original: str
+) -> SpinParity:
     """Combine RIPL's unique pick with the original ENSDF J field.
 
     RIPL's numeric spin wins for :attr:`~nook.quantities.SpinParity.candidates`
@@ -139,7 +148,14 @@ def _decay_modes(line: str, count: int) -> tuple[tuple[str, Uncertain], ...]:
         if not name:
             continue
         operator = None if modifier in ("", "=") else modifier
-        modes.append((name, Uncertain(percent, operator=operator, raw=line[base:base + 22].strip())))
+        modes.append(
+            (
+                name,
+                Uncertain(
+                    percent, operator=operator, raw=line[base : base + 22].strip()
+                ),
+            )
+        )
     return tuple(modes)
 
 
@@ -197,7 +213,9 @@ def parse_levels_file(text: str) -> tuple[RiplNuclideLevels, ...]:
             levels.append(
                 Level(
                     index=index,
-                    energy=Uncertain(energy_mev * MEV_TO_KEV, raw=f"{energy_mev:.6f} MeV"),
+                    energy=Uncertain(
+                        energy_mev * MEV_TO_KEV, raw=f"{energy_mev:.6f} MeV"
+                    ),
                     spin_parity=_spin_parity(spin, parity, j_flag, original_jpi),
                     half_life=_half_life(half_life_text),
                     # A set `unc` flag (X, Y, ... SN, SP) says the absolute

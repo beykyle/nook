@@ -22,13 +22,21 @@ from __future__ import annotations
 
 import bisect
 import math
-from dataclasses import dataclass, field as dataclass_field
+from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 
 from .model import Level, LevelScheme
 from .nuclide import Nuclide
 from .quantities import Uncertain
 
-__all__ = ["LevelComparison", "LevelMatch", "MassComparison", "levels", "masses", "mass_table"]
+__all__ = [
+    "LevelComparison",
+    "LevelMatch",
+    "MassComparison",
+    "levels",
+    "masses",
+    "mass_table",
+]
 
 
 @dataclass(frozen=True)
@@ -71,9 +79,7 @@ class LevelComparison:
     def rms_delta_kev(self) -> float | None:
         if not self.matched:
             return None
-        return math.sqrt(
-            sum(m.delta_kev ** 2 for m in self.matched) / len(self.matched)
-        )
+        return math.sqrt(sum(m.delta_kev**2 for m in self.matched) / len(self.matched))
 
     @property
     def max_delta_kev(self) -> float | None:
@@ -89,24 +95,28 @@ class LevelComparison:
     def to_records(self) -> list[dict]:
         out = []
         for m in self.matched:
-            out.append({
-                "kind": "matched",
-                "energy_a_kev": m.a.energy_kev,
-                "energy_b_kev": m.b.energy_kev,
-                "delta_kev": m.delta_kev,
-                "combined_sigma_kev": m.combined_sigma_kev,
-                "significant": m.significant,
-                "jpi_a": str(m.a.spin_parity),
-                "jpi_b": str(m.b.spin_parity),
-                "jpi_agree": m.jpi_agree,
-            })
+            out.append(
+                {
+                    "kind": "matched",
+                    "energy_a_kev": m.a.energy_kev,
+                    "energy_b_kev": m.b.energy_kev,
+                    "delta_kev": m.delta_kev,
+                    "combined_sigma_kev": m.combined_sigma_kev,
+                    "significant": m.significant,
+                    "jpi_a": str(m.a.spin_parity),
+                    "jpi_b": str(m.b.spin_parity),
+                    "jpi_agree": m.jpi_agree,
+                }
+            )
         for side, levels_ in (("only_a", self.only_a), ("only_b", self.only_b)):
             for lv in levels_:
-                out.append({
-                    "kind": side,
-                    "energy_kev": lv.energy_kev,
-                    "jpi": str(lv.spin_parity),
-                })
+                out.append(
+                    {
+                        "kind": side,
+                        "energy_kev": lv.energy_kev,
+                        "jpi": str(lv.spin_parity),
+                    }
+                )
         return out
 
     def __str__(self) -> str:
@@ -156,9 +166,7 @@ def _match_levels(
     # per-pair window max(tol, 3*hypot(sa, sb)) never exceeds
     # max(tol, 3*(sa + max_sb)), so no accepted pair is missed.
     sorted_b = sorted(
-        (lb.energy_kev, j)
-        for j, lb in enumerate(levels_b)
-        if lb.energy_kev is not None
+        (lb.energy_kev, j) for j, lb in enumerate(levels_b) if lb.energy_kev is not None
     )
     energies_b = [energy for energy, _ in sorted_b]
     max_sigma_b = max(
@@ -282,7 +290,9 @@ class MassComparison:
 
     @property
     def experimental(self) -> dict[str, Uncertain]:
-        return {k: v for k, v in self.entries.items() if k in ("ame-livechart", "ripl-exp")}
+        return {
+            k: v for k, v in self.entries.items() if k in ("ame-livechart", "ripl-exp")
+        }
 
     @property
     def spread_kev(self) -> float | None:
@@ -293,7 +303,7 @@ class MassComparison:
         return max(values) - min(values)
 
     def sigma_between(self, key_a: str, key_b: str) -> float | None:
-        """|difference| / combined sigma between two entries."""
+        """Absolute difference over combined sigma between two entries."""
         ua, ub = self.entries.get(key_a), self.entries.get(key_b)
         if ua is None or ub is None or ua.value is None or ub.value is None:
             return None
@@ -320,7 +330,9 @@ class MassComparison:
         return "\n".join(rows)
 
 
-def masses(nuclide, cache=None, ripl_path=None, with_livechart: bool = True) -> MassComparison:
+def masses(
+    nuclide, cache=None, ripl_path=None, with_livechart: bool = True
+) -> MassComparison:
     """One nuclide's mass excess across every evaluation we can reach.
 
     ``with_livechart=False`` skips the network/API entry and compares the
