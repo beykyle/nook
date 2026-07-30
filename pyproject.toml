@@ -16,6 +16,19 @@ pandas = ["pandas>=1.5"]
 uncertainties = ["uncertainties>=3.1"]
 plot = ["matplotlib>=3.6"]
 dev = ["pytest>=7", "pandas>=1.5", "uncertainties>=3.1", "matplotlib>=3.6"]
+docs = [
+    "sphinx>=7",
+    "furo",
+    "myst-parser>=2",
+    # autodoc imports nook.plotting, which imports matplotlib eagerly
+    "matplotlib>=3.6",
+    "pandas>=1.5",
+    "uncertainties>=3.1",
+]
+
+[project.urls]
+Documentation = "https://beykyle.github.io/nook/"
+Repository = "https://github.com/beykyle/nook"
 
 [project.scripts]
 nook = "nook.cli:main"
