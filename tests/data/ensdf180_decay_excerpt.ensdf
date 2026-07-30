@@ -1,0 +1,148 @@
+180HF    180LU B- DECAY                1986KEZW,1973KAYQ,1971GU0215NDS    201506
+180HF  H TYP=FUL$AUT=E.A. MCCUTCHAN$CIT=NDS 126, 151 (2015)$CUT=1-Feb-2015$     
+180HF c  1986KeZW: {+180}Lu activity from {+180}Hf(n,p), E(n)=fast. Measured    
+180HF2c  E|g, I|g using Ge(Li) detector (FWHM=1.5 keV at 500 keV)               
+180HF c  1973KaYQ: {+180}Lu activity from {+180}Hf(n,p), E(n)=14 MeV. Measured  
+180HF2c  E|g, I|g, E|b, I|b, |g(t), |g|g, and |b|g coincidences with Ge(Li)     
+180HF3c  detectors and scintillation spectrometers.                             
+180HF c  1971Gu02: {+180}Lu activity from {+180}Hf(n,p), E(n)=14.8 MeV.         
+180HF2c  Measured E|g, I|g, E|b, I|b, |g(t), |g|g, and |b|g coincidences with a 
+180HF3c  Ge(Li) and NaI(Tl) detector and a plastic scintillator.                
+180HF c  Other: 1971Sw01                                                        
+180HF c  No |b{+-} population (0.005% {I18}) from {+180}Lu to {+180m}Hf(5.5 h)  
+180HF2c  (1986Ke19). Other value: 0.46% {I15} (1984Es02). The discrepancy with  
+180HF3c  the value given by 1986Ke19 could be explained by assuming the         
+180HF4c  existence of a {+180}Lu isomer. However, 1986Le19 found no evidence    
+180HF5c  of a {+180}Lu isomer in the 10-300 s half-life range. % branching      
+180HF6c  given by 1984Es02 may be affected by an imprecise correction of the    
+180HF7c  contribution from {+180}Hf (5.5 h) directly produced in the reaction.  
+180HF8c  Its uncertainty may have also been underestimated by using a linear    
+180HF9c  approximation with partial derivatives for the propagation of large    
+180HFac  uncertainties.                                                         
+180HF cL E$From a least-squares fit to E|g, by evaluator.                       
+180HF cL J,T$From the Adopted Levels                                            
+180HF cG E,RI$Weighted average of data from 1986KeZW, 1973KaYQ, and 1971Gu02,   
+180HF2cG except where noted.                                                    
+180HF cG M,MR$From the Adopted Gammas.                                          
+180HF cG E(X)$Reported by 1971Gu02 have not been confirmed by 1973KaYQ,         
+180HF2cG 1986KeZW.                                                              
+180HF cL $See 1992So09 and 1990SoZZ for configuration assignments of {+180}Hf   
+180HF2cL levels populated in the |b{+-} decay of {+180}Lu, based on |b{+-}      
+180HF3cL transition rates, on calculated two-quasiparticle excitation           
+180HF4cL energies, and on level de-excitation patterns.                         
+180HF cL E(A)$K|p=0+ ground state rotational band                               
+180HF cL E(B)$K|p=2+ |g-vibrational band                                        
+180HF D  MODIFIED BY E. BROWNE (OCTOBER 21, 1992).                              
+180HF D  CC$FROM BrIcc v2.3a (30-Jun-2013) 2008Ki07, "Frozen Orbitals" appr.    
+180LU  P 0.0          5+                5.7 M     1              3100     70    
+180HF  N 0.43      1            1.00      1.0                                   
+180HF cN NR$From decay scheme assuming no |b{+-} feeding to g.s. and 93.3       
+180HF2cN level and setting |S(I(|g+ce) to g.s. (except 93.3|g) and 93.3         
+180HF3cN level)=100%.                                                           
+180HF PN                                                                     3  
+180HF  G 69.00     20 3.5    15                                                 
+180HFX G FLAG=X                                                                 
+180HF  G 108.3     3  0.129  53                                                 
+180HF  G 1219.2    5  1.0    5                                                  
+180HFX G FLAG=X                                                                 
+180HF  G 1230.8    5  1.0    5                                                  
+180HFX G FLAG=X                                                                 
+180HF  G 1282.5    5  1.0    5                                                  
+180HFX G FLAG=X                                                                 
+180HF  G 1446.1    5  1.5    5                                                  
+180HFX G FLAG=X                                                                 
+180HF  G 1613.6    3  0.319  48                                                 
+180HF  L 0.0          0+                STABLE                              A   
+180HF  L 93.306    15 2+                1.519 NS  10                        A   
+180HF  G 93.308    15 27.3   15 E2                      4.64                    
+180HFS G KC=1.082 16$LC=2.70 4$MC=0.675 10$NC=0.1564 22$OC=0.0197 3$            
+180HFS G PC=6.96E-5 10                                                          
+180HF  L 308.541   21 4+                71 PS     10                        A   
+180HF  G 215.241   15 51.3   25 E2                      0.225                   
+180HFS G KC=0.1364 20$LC=0.0678 10$MC=0.01659 24$NC=0.00386 6$OC=0.000510 8$    
+180HFS G PC=9.09E-6 13                                                          
+180HF  B             5       2           7.42    18                             
+180HFS B EAV=1099 32                                                            
+180HF cB E$2740 {I200} (1971Gu02).                                              
+180HF cB IB$2% (1971Gu02).                                                      
+180HF  L 1183.47   13 2+                                                        
+180HF  G 875.3     3  0.5    1                                                  
+180HF  G 1089.9    2  2.7    2  M1+E2                   0.005117                
+180HFS G KC=0.0043 14$LC=0.00064 19$MC=0.00014 5$NC=3.4E-5 10$OC=5.2E-6 16$     
+180HFS G PC=3.4E-7 12                                                           
+180HF  L 1200.04   5  2+                0.51 PS   5                         B   
+180HF  G 891.60    5  1.66   13 [E2]                   0.00517                  
+180HFS G KC=0.00425 6$LC=0.000716 10$MC=0.0001633 23$NC=3.86E-5 6$OC=5.76E-6 8$ 
+180HFS G PC=3.32E-7 5                                                           
+180HF  G 1106.6    2  52.7   19 M1+E2     9.6    +22-580.0033718                
+180HFS G KC=0.00280 15$LC=0.000443 21$MC=0.000100 5$NC=2.37E-5 11$              
+180HFS G OC=3.58E-6 17$PC=2.19E-7 13                                            
+180HF  G 1199.7    2  54     4  (E2)                   0.00285                  
+180HFS G KC=0.00237 4$LC=0.000369 6$MC=8.34E-5 12$NC=1.97E-5 3$OC=2.99E-6 5$    
+180HFS G PC=1.86E-7 3                                                           
+180HF  B             3       2           7.0     3                             ?
+180HFS B EAV=707 31                                                             
+180HF  L 1291.46   6  3+                                                    B   
+180HF  G 982.7     2  6.0    7  M1+E2     -5.0   +20-15 0.00443                 
+180HFS G KC=0.00364 24$LC=0.00059 4$MC=0.000134 8$NC=3.18E-5 17$OC=4.8E-6 3$    
+180HFS G PC=2.86E-7 21                                                          
+180HF  G 1198.0    2  32.2   18                                                 
+180HF  B             2       1           7.07    23                            ?
+180HFS B EAV=668 30                                                             
+180HF  L 1374.9    3  (4-)              0.57 US   2                             
+180HF  G 1066.4    3  4.1    6                                                  
+180HF  B             0.7     4           7.5     3                              
+180HFS B EAV=633 30                                                             
+180HF cB IB$8% (1971Gu02).                                                      
+180HF cB E$2000 {I200} (1971Gu02).                                              
+180HF  L 1409.56   12 (4+)                                                  B   
+180HF  G 1100.9    2  3.8    2                                                  
+180HF  G 1316.2    2  2.3    2  (E2)                   0.00240                  
+180HFS G KC=0.00199 3$LC=0.000304 5$MC=6.84E-5 10$NC=1.621E-5 23$OC=2.46E-6 4$  
+180HFS G PC=1.555E-7 22                                                         
+180HF  L 1607.97   5  (4)+                                                      
+180HF  G 198.3     2  2.57   13 [E2]                    0.296                   
+180HFS G KC=0.1712 25$LC=0.0950 14$MC=0.0233 4$NC=0.00543 8$OC=0.000712 11$     
+180HFS G PC=1.120E-5 16                                                         
+180HF  G 316.50    3  30.0   9  E2                      0.0675                  
+180HFS G KC=0.0476 7$LC=0.01532 22$MC=0.00368 6$NC=0.000860 12$OC=0.0001176 17$ 
+180HFS G PC=3.43E-6 5                                                           
+180HF  G 407.96    3  100    2  E2                      0.0329                  
+180HFS G KC=0.0247 4$LC=0.00636 9$MC=0.001505 21$NC=0.000353 5$OC=4.95E-5 7$    
+180HFS G PC=1.85E-6 3                                                           
+180HF  G 424.4     2  2.8    4  E2                      0.0296                  
+180HFS G KC=0.0223 4$LC=0.00559 8$MC=0.001320 19$NC=0.000310 5$OC=4.36E-5 7$    
+180HFS G PC=1.681E-6 24                                                         
+180HF  G 1299.3    2  31.3   13 (E2)                   0.00246                  
+180HFS G KC=0.00204 3$LC=0.000312 5$MC=7.03E-5 10$NC=1.666E-5 24$OC=2.53E-6 4$  
+180HFS G PC=1.593E-7 23                                                         
+180HF  G 1514.4    2  20     2  [E2]                   0.00190                  
+180HFS G KC=0.001532 22$LC=0.000228 4$MC=5.13E-5 8$NC=1.215E-5 17$OC=1.85E-6 3$ 
+180HFS G PC=1.195E-7 17                                                         
+180HF  B             78      2           5.17    8                              
+180HFS B EAV=534 30                                                             
+180HF cB IB$90% to 1607.7, 1609.7, and 1742.7 levels (1971Gu02).                
+180HF cB E$1540 {I100} (1971Gu02).                                              
+180HF  L 1609.8    4  (3-)                                                      
+180HF  G 234.9     2  2.6    3  M1+E2     0.4    3      0.33  4                 
+180HFS G KC=0.27 4$LC=0.0466 7$MC=0.0106 3$NC=0.00252 6$OC=0.000379 7$          
+180HFS G PC=2.3E-5 4                                                            
+180HF  B             1.5     2           6.88    10                             
+180HFS B EAV=533 30                                                             
+180HF  L 1742.87   12 (5)+                                                      
+180HF  G 135.0     2  4.3    6  M1                      1.700                   
+180HFS G KC=1.416 21$LC=0.220 4$MC=0.0497 8$NC=0.01182 18$OC=0.00181 3$         
+180HFS G PC=0.0001202 18                                                        
+180HF  G 333.0     5  2.9    3                                                  
+180HF  G 451.6     2  2.2    1                                                  
+180HF  G 1434.1    2  4.8    5                                                  
+180HF cG RI$weighted average of 1973KaYQ and 1986KeZW. Other: 12 {I2}           
+180HF2cG (1971Gu02).                                                            
+180HF  B             9       1           5.95    10                             
+180HFS B EAV=478 29                                                             
+180HF  L 2183.1    3                                                            
+180HF  G 1874.5    3  1.4    3                                                  
+180HF  L 2197.04   22                                                           
+180HF  G 997.1     3  0.37   11                                                 
+180HF  G 1888.4    3  2.4    4                                                  
+

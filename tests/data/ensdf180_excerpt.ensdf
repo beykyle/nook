@@ -1,0 +1,80 @@
+180TA    ADOPTED LEVELS, GAMMAS                                  15NDS    201506
+180TA  H TYP=FUL$AUT=E.A. MCCUTCHAN$CIT=NDS 126, 151 (2015)$CUT=1-Feb-2015$     
+180TA  Q 702       3  6648   3  5760   3  2023    3    2012WA38                 
+180TA CL BAND(A)$K|p=1+ band. Configuration=|p7/2[404]|n9/2[624]                
+180TA CL BAND(B)$K=4+ band. Configuration=|p9/2[514]|n1/2[521]                  
+180TA CL BAND(C)$K=(5) band.                                                    
+180TA CL BAND(H)$K|p=7+ band. Configuration=|p5/2[402]|n9/2[624]                
+180TA CL BAND(D)$K|p=8+ band. Configuration=|p9/2[514]|n7/2[503]                
+180TA cL BAND(E)$Side band of Band G.                                           
+180TA CL BAND(F)$K|p=8+ band. Configuration=|p7/2[404]|n9/2[624]                
+180TA CL BAND(I)$K|p=7- band. Configuration=|p7/2[404]|n7/2[514]                
+180TA CL BAND(J)$K|p=6- band. Configuration=|p7/2[404]|n5/2[512]                
+180TA CL BAND(K)$K|p=0- band. Configuration=|p9/2[514]|n9/2[624]                
+180TA CL BAND(L)$K|p=1- band. Configuration=|p7/2[404]|n5/2[512]                
+180TA CL BAND(M)$K|p=(14) band, 4-quasiparticle band.                           
+180TA CL BAND(O)$K|p=13- band.                                                  
+180TA CL BAND(P)$K|p=11- band, [9-]~#|g-vibration                               
+180TA CL BAND(Q)$K|p=9- band. Configuration=|p9/2[514]|n9/2[624]                
+180TA CL BAND(U)$K|p=15- band. Configuration= |n9/2[624]                        
+180TA CL BAND(V)$K|p=(18+) band. Configuration=|n9/2[624]|n7/2[514]|n11/2[615]  
+180TA CL BAND(W)$K|p=(19-) band. Configuration=|n9/2[624]|n7/2[514]|n1/2[510]   
+180TA CL BAND(b)$K|p=1+ band. Configuration=|p9/2[514]|n7/2[514]                
+180TA CL BAND(e)$K|p=(2+) band. Configuration=|n9/2[624]|p5/2[402].             
+180TA CL BAND(f)$K|p=3- band. Configuration=|p7/2[404]|n1/2[510]                
+180TA CL BAND(g)$K|p=1- band. Configuration=|n7/2[514]-|p5/2[402]               
+180TA CL BAND(h)$K|p=(4-) band. Configuration=|p7/2[404]|n1/2[510]              
+180TA CL BAND(j)$K|p=(3-) band. Configuration=|p7/2[404]|n1/2[521]              
+180TA  XA180HF B- DECAY (5.53 H)                                                
+180TA  XB176YB(11B,A3NG),(7LI,3NG)                                              
+180TA  XC179HF(A,T),(3HE,D)                                                     
+180TA  XD180HF(P,NG),(D,2NG)                                                    
+180TA  XE180HF(238U,XG)                                                         
+180TA  XF180TA(G,G'): TARGET=9- ISOMER                                          
+180TA  XGCOULOMB EXCITATION                                                     
+180TA  XH181TA(G,N)                                                             
+180TA  XI181TA(P,D)                                                             
+180TA  XJ181TA(D,T)                                                             
+180TA  L 0.0          1+                8.154 H   6                         A   
+180TAX L XREF=ABCDFHIJ                                                          
+180TA2 L %B-=15 3$%EC=85 3                                                      
+180TA  L 39.54     5  2+                                                    A   
+180TAX L XREF=BCDHIJ                                                            
+180TA  G 39.5      1  100                                                       
+180TA  L 77.2      12 9-                7.1E15 Y  GT                        QM1 
+180TAX L XREF=ABCDEFGI                                                          
+180TA2 L MOME2=+4.95 2$MOMM1=4.825 11                                           
+180TA DL E         LEVEL ENERGY HELD FIXED IN LEAST-SQUARES ADJUSTMENT          
+180TA  L 107.78    4  0-                19.2 NS   7                         K   
+180TAX L XREF=BD                                                                
+180TA  G 107.69    5  100       E1                      0.303                   
+180TAS G KC=0.248 4$LC=0.0422 6$MC=0.00958 14$NC=0.00225 4$OC=0.000331 5$       
+180TAS G PC=1.663E-5 24                                                         
+180TAB G BE1W=6.79E-6 25                                                        
+180TA  L 110.75    6  3+                                                    A   
+180TAX L XREF=BC(*134)DHIJ                                                      
+180TA  G 71.1      1  100                                                       
+180TA  L 130.38    7  1-                                                    K   
+180TAX L XREF=BC(*134)D                                                         
+180TA  G 23                                                                    S
+180TAL G FL=107.78                                                              
+180TA  L X+519.0   10 (5)               16.1 NS   19                        C   
+180TAX L XREF=BD                                                                
+180TA  G X                                                                     ?
+180TAL G FL=520.04                                                              
+180TA  L 559.50    5  (2+)                                                  e   
+180TAX L XREF=C(*563)D                                                          
+180TA  G 188.8     1  2.0    4                                                  
+180TA  G 239.2     1  13     3  (M1,E2)                 0.27  11                
+180TAS G KC=0.21 11$LC=0.0480 8$MC=0.0113 4$NC=0.00268 7$OC=0.000397 20$        
+180TAS G PC=1.8E-5 11                                                           
+180TA  G 429.3     1  15     LE                                                 
+180TAL G FL=130.38                                                              
+180TA  G 448.7     1  53     11                                                 
+180TA  G 519.9     1  100    20                                                 
+180TA  G 559.6     1  23     5                                                  
+180TA  L 575.80    13 (8+)              1 NS      LT                        H   
+180TAX L XREF=BC(*563)D                                                         
+180TA  G 218.75    25 73     9                                                  
+180TA  G 398.1     1  100    7                                                  
+

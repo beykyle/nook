@@ -1,0 +1,187 @@
+{
+ "_warning": "Produced by nook itself. These detect change, not correctness -- nudel does not compute these quantities.",
+ "bands": {
+  "definitions": {
+   "A": "K\u03c0=1+ band. Configuration=\u03c07/2[404]\u03bd9/2[624]",
+   "B": "K=4+ band. Configuration=\u03c09/2[514]\u03bd1/2[521]",
+   "C": "K=(5) band.",
+   "D": "K\u03c0=8+ band. Configuration=\u03c09/2[514]\u03bd7/2[503]",
+   "E": "Side band of Band G.",
+   "F": "K\u03c0=8+ band. Configuration=\u03c07/2[404]\u03bd9/2[624]",
+   "H": "K\u03c0=7+ band. Configuration=\u03c05/2[402]\u03bd9/2[624]",
+   "I": "K\u03c0=7- band. Configuration=\u03c07/2[404]\u03bd7/2[514]",
+   "J": "K\u03c0=6- band. Configuration=\u03c07/2[404]\u03bd5/2[512]",
+   "K": "K\u03c0=0- band. Configuration=\u03c09/2[514]\u03bd9/2[624]",
+   "L": "K\u03c0=1- band. Configuration=\u03c07/2[404]\u03bd5/2[512]",
+   "M": "K\u03c0=(14) band, 4-quasiparticle band.",
+   "O": "K\u03c0=13- band.",
+   "P": "K\u03c0=11- band, [9-]~#\u03b3-vibration",
+   "Q": "K\u03c0=9- band. Configuration=\u03c09/2[514]\u03bd9/2[624]",
+   "U": "K\u03c0=15- band. Configuration= \u03bd9/2[624]",
+   "V": "K\u03c0=(18+) band. Configuration=\u03bd9/2[624]\u03bd7/2[514]\u03bd11/2[615]",
+   "W": "K\u03c0=(19-) band. Configuration=\u03bd9/2[624]\u03bd7/2[514]\u03bd1/2[510]",
+   "b": "K\u03c0=1+ band. Configuration=\u03c09/2[514]\u03bd7/2[514]",
+   "e": "K\u03c0=(2+) band. Configuration=\u03bd9/2[624]\u03c05/2[402].",
+   "f": "K\u03c0=3- band. Configuration=\u03c07/2[404]\u03bd1/2[510]",
+   "g": "K\u03c0=1- band. Configuration=\u03bd7/2[514]-\u03c05/2[402]",
+   "h": "K\u03c0=(4-) band. Configuration=\u03c07/2[404]\u03bd1/2[510]",
+   "j": "K\u03c0=(3-) band. Configuration=\u03c07/2[404]\u03bd1/2[521]"
+  },
+  "labels": [
+   "A",
+   "C",
+   "H",
+   "K",
+   "Q",
+   "e"
+  ]
+ },
+ "decay": {
+  "dsid": "180LU B- DECAY",
+  "feedings": [
+   {
+    "intensity": 5.0,
+    "kind": "B",
+    "level": 2,
+    "log_ft": 7.42
+   },
+   {
+    "intensity": 3.0,
+    "kind": "B",
+    "level": 4,
+    "log_ft": 7.0
+   },
+   {
+    "intensity": 2.0,
+    "kind": "B",
+    "level": 5,
+    "log_ft": 7.07
+   },
+   {
+    "intensity": 0.7,
+    "kind": "B",
+    "level": 6,
+    "log_ft": 7.5
+   },
+   {
+    "intensity": 78.0,
+    "kind": "B",
+    "level": 8,
+    "log_ft": 5.17
+   },
+   {
+    "intensity": 1.5,
+    "kind": "B",
+    "level": 9,
+    "log_ft": 6.88
+   },
+   {
+    "intensity": 9.0,
+    "kind": "B",
+    "level": 10,
+    "log_ft": 5.95
+   }
+  ],
+  "normalization": {
+   "BR": 1.0,
+   "NB": 1.0,
+   "NR": 0.43
+  },
+  "parent": "180Lu",
+  "total_feeding": 99.2
+ },
+ "gammas": [
+  {
+   "end": 0,
+   "energy": 39.5,
+   "mult": null,
+   "start": 1
+  },
+  {
+   "end": 0,
+   "energy": 107.69,
+   "mult": "E1",
+   "start": 3
+  },
+  {
+   "end": 1,
+   "energy": 71.1,
+   "mult": null,
+   "start": 4
+  },
+  {
+   "end": 3,
+   "energy": 23.0,
+   "mult": null,
+   "start": 5
+  },
+  {
+   "end": null,
+   "energy": null,
+   "mult": null,
+   "start": 6
+  },
+  {
+   "end": null,
+   "energy": 188.8,
+   "mult": null,
+   "start": 7
+  },
+  {
+   "end": null,
+   "energy": 239.2,
+   "mult": "(M1,E2)",
+   "start": 7
+  },
+  {
+   "end": 5,
+   "energy": 429.3,
+   "mult": null,
+   "start": 7
+  },
+  {
+   "end": 4,
+   "energy": 448.7,
+   "mult": null,
+   "start": 7
+  },
+  {
+   "end": 1,
+   "energy": 519.9,
+   "mult": null,
+   "start": 7
+  },
+  {
+   "end": 0,
+   "energy": 559.6,
+   "mult": null,
+   "start": 7
+  },
+  {
+   "end": null,
+   "energy": 218.75,
+   "mult": null,
+   "start": 8
+  },
+  {
+   "end": null,
+   "energy": 398.1,
+   "mult": null,
+   "start": 8
+  }
+ ],
+ "moments": [
+  {
+   "energy": 77.2,
+   "mu": 4.825,
+   "q": 4.95
+  }
+ ],
+ "q_record": {
+  "q_alpha": 2023.0,
+  "q_beta_minus": 702.0,
+  "reference": "2012WA38",
+  "s_n": 6648.0,
+  "s_p": 5760.0
+ }
+}

@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nook"
+version = "0.1.0"
+description = "Pull nuclear level schemes out of ENSDF"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+pandas = ["pandas>=1.5"]
+uncertainties = ["uncertainties>=3.1"]
+plot = ["matplotlib>=3.6"]
+dev = ["pytest>=7", "pandas>=1.5", "uncertainties>=3.1", "matplotlib>=3.6"]
+
+[project.scripts]
+nook = "nook.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nook"]
+
+[tool.hatch.build.targets.sdist]
+# the RIPL-3 mirror is repo data, not package data
+exclude = ["data"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# tests/_fingerprint.py is shared with tools/generate_golden.py
+pythonpath = ["tests"]
+
+[tool.pyright]
+# resolve imports (pytest, pandas, matplotlib) against the project venv
+venvPath = "."
+venv = ".venv"
+# tests import each other bare (`from test_ripl3 import needs_mirror`)
+extraPaths = ["tests"]
+
+# Tests assert a value into existence and then use it; requiring a second
+# narrowing assert on every Optional field is noise, so the Optional/attribute
+# strictness applies to src/ only.  tools/generate_golden.py additionally
+# imports nudel, which is deliberately not a dependency (see CLAUDE.md).
+[[tool.pyright.executionEnvironments]]
+root = "tests"
+reportOptionalMemberAccess = "none"
+reportOptionalOperand = "none"
+reportArgumentType = "none"
+reportOperatorIssue = "none"
+reportIndexIssue = "none"
+reportAttributeAccessIssue = "none"
+reportCallIssue = "none"
+
+[[tool.pyright.executionEnvironments]]
+root = "tools"
+reportMissingImports = "none"
+reportOptionalMemberAccess = "none"
+reportOptionalOperand = "none"
+reportArgumentType = "none"
+reportAttributeAccessIssue = "none"
+reportIndexIssue = "none"
+

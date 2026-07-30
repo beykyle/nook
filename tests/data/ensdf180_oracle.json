@@ -1,0 +1,425 @@
+{
+ "_provenance": {
+  "chain_checksum": "sha256:694125464117bcf023123c163ebb182bc1eb387e836553b79b7a41889d0751bc",
+  "chain_file": "ensdf.180",
+  "nook_version": "0.1.0",
+  "generated": "2026-07-26",
+  "generated_by": "tools/generate_golden.py",
+  "oracle": "nudel",
+  "oracle_licence": "GPL-3.0-or-later (used only to generate this file; not a dependency of nook)",
+  "oracle_url": "https://github.com/op3/nudel",
+  "oracle_version": "0.0.1"
+ },
+ "chain": {
+  "datasets": {
+   "180/69/ADOPTED LEVELS": {
+    "digest": "sha256:bdb8c9767d3e28de430b45be57187316266f0e7658dc16751218f8fd6a7007bb",
+    "levels": 1
+   },
+   "180/70/ADOPTED LEVELS": {
+    "digest": "sha256:5563d23453fde0e4a6c1b3c82916cbc33eea4dcd20ee87ed5870e6f329c2957f",
+    "levels": 1
+   },
+   "180/71/180HF(238U,XG)": {
+    "digest": "sha256:e7c44a4c52dd22b0d4fceabef2dd789845c9b87380ff0135fb6ac5ef2d28dc0c",
+    "levels": 5
+   },
+   "180/71/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:cd015a7bfce7a04662aa24a14376ed9f5dd749393785d8e6f2e0b7746edbfebc",
+    "levels": 13
+   },
+   "180/72/178HF(T,P)": {
+    "digest": "sha256:f8d7e358ff3f1a036a296642e1303b4489fb5e76295bf9820d6cdb36f6956323",
+    "levels": 18
+   },
+   "180/72/179HF(D,P)": {
+    "digest": "sha256:570c6eb957ff2c8d9d7a409b8fded2a0444947b61a8bbacce9bc7b71ae57d1d8",
+    "levels": 29
+   },
+   "180/72/179HF(N,G) E=RES: AV": {
+    "digest": "sha256:7583eb407fbfac560c6bd8def15bbb50275b08ca4d49216a09300952956a9c89",
+    "levels": 33
+   },
+   "180/72/179HF(N,G) E=THERMAL": {
+    "digest": "sha256:cc5c0a1d1b05f2fd9df7efb29cb770579a54e6860aedf3934558a12d5dbea197",
+    "levels": 153
+   },
+   "180/72/180HF(136XE,136XE'G)": {
+    "digest": "sha256:5108996bada152f9d063b9c64d8aa447656a784f1641404b06c2ccdfae014ab0",
+    "levels": 76
+   },
+   "180/72/180HF(238U,238U'G)": {
+    "digest": "sha256:ff22df2ed4cc82c679ec1b56ffaa3676d14e6d79183b64cac1f7e5ad230762ff",
+    "levels": 36
+   },
+   "180/72/180HF(G,G')": {
+    "digest": "sha256:0c2977b69a6c33ec531bff29e6d75027db22cc0e41dbf8ef55cc805e10fcc3c0",
+    "levels": 42
+   },
+   "180/72/180HF(N,N'G)": {
+    "digest": "sha256:3158d3fab12e1bdd50fdbe0a95b8413384ae9bee340ec3f3fb2539649f7f999e",
+    "levels": 42
+   },
+   "180/72/180HF(POL P,P')": {
+    "digest": "sha256:2c2f3a83a5dc1798319ce703525d57aa4b2043791c47b5ec7e03d89cc7171881",
+    "levels": 27
+   },
+   "180/72/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:de54301c2e0bc01064904a68c6ba80fd97be4d49324590c184b466364dd72e7e",
+    "levels": 282
+   },
+   "180/72/COULOMB EXCITATION": {
+    "digest": "sha256:000287beba170d60690216dea75b7328144c5b2ba9d983a6c2e4581103da0fc0",
+    "levels": 8
+   },
+   "180/73/176YB(11B,A3NG),(7LI,3NG)": {
+    "digest": "sha256:4eaafbc41eae90e08eabc064100ec5abeff2d5fd329467cfa51d7161dd5da81b",
+    "levels": 176
+   },
+   "180/73/179HF(A,T),(3HE,D)": {
+    "digest": "sha256:42c79f6188b550f6e6a3678838f7955316956ca2690c279255453e9f5fa17a16",
+    "levels": 11
+   },
+   "180/73/180HF(238U,XG)": {
+    "digest": "sha256:4af3a20a6e9981ce98258d4a34935c8796420642a9fe142ce7467a3cc7ec4d10",
+    "levels": 15
+   },
+   "180/73/180HF(P,NG),(D,2NG)": {
+    "digest": "sha256:e898f16bfd020bee436a1c50aed7b82272efca8b58131bc3b02f59baac489408",
+    "levels": 105
+   },
+   "180/73/180TA(G,G'): TARGET=9- ISOMER": {
+    "digest": "sha256:6de57df40a915cc02e0b28036cfd438c43e7d1fbfe7723ac3c045a874a46e89c",
+    "levels": 11
+   },
+   "180/73/181TA(D,T)": {
+    "digest": "sha256:5b62a1d1ff59bbf469f6e6e2669623ead3c06146aea8754d506d1cad423fd307",
+    "levels": 23
+   },
+   "180/73/181TA(G,N)": {
+    "digest": "sha256:0893bb5d1e9c6c3244b4a4e039ff563efa8d396fabbad9a732bb77abf92efc02",
+    "levels": 32
+   },
+   "180/73/181TA(P,D)": {
+    "digest": "sha256:4615b4c3a9b53fd560aea08acc22e388666f58be7d98abbcc76f116ec2b42ba1",
+    "levels": 48
+   },
+   "180/73/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:5ab2583ba5134d790942107bfc4a67dc35dcdfca9f8873ea1ec5e76f1594cbe0",
+    "levels": 240
+   },
+   "180/73/COULOMB EXCITATION": {
+    "digest": "sha256:f97817a863a154b0f8cda879cb2d8d93fb485f9d7655e41e424dd73529d31312",
+    "levels": 13
+   },
+   "180/74/136XE(48CA,4NG)": {
+    "digest": "sha256:67db02bda6b4a6eb200c43446efbfc79bf3c2e579aa19dfe44502d109adecff8",
+    "levels": 45
+   },
+   "180/74/176YB(9BE,5NG)": {
+    "digest": "sha256:3afde9063a0dd4550d0a8c76b0cc7aa15322e3192101068db9b315d1cb193a3b",
+    "levels": 112
+   },
+   "180/74/180W(D,D')": {
+    "digest": "sha256:2a0ff554afe2c83355dd5570d7da6d1d86d988d42ba1aeed3948a0eb840cf8c8",
+    "levels": 13
+   },
+   "180/74/180W(G,G'): MOSSBAUER": {
+    "digest": "sha256:23afe45ed78d56fb5138783ee877e48dd7215b5d64b82b5a51b0642f950fcb65",
+    "levels": 2
+   },
+   "180/74/181TA(P,2NG)": {
+    "digest": "sha256:67ab27d44a765e44be8d01a0c93f8771e191f440d561e71ef7f32c2740d857d9",
+    "levels": 48
+   },
+   "180/74/182W(P,T)": {
+    "digest": "sha256:6c245007e7a832ee73d987705756ff366f71738fe7a19c138983eec84b6c1519",
+    "levels": 38
+   },
+   "180/74/186W(N,7NG)": {
+    "digest": "sha256:287a26ef226cf7e587bcc75a9ba53bdcff4baf00ce8d3ec759a315b58a98328b",
+    "levels": 7
+   },
+   "180/74/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:c1228fa99cc327c96dba37eec89e43ba1f12b9a9c72a09891030b460bf7e3692",
+    "levels": 164
+   },
+   "180/74/HF(A,XNG)": {
+    "digest": "sha256:31fbacfb94057becda07b25eabb02b421c65330390d415328c13f04f699d1af2",
+    "levels": 41
+   },
+   "180/75/170ER(14N,4NG),181TA(A,5NG)": {
+    "digest": "sha256:e184c25048d4d815efa6b0f82c0cd988cb1804a0f298c7280ddb34496bb4566d",
+    "levels": 98
+   },
+   "180/75/176YB(10B,6NG),174YB(11B,5NG)": {
+    "digest": "sha256:cc28d43ff38814d8a49ed09883c487a34ffd04bfac1a93f5781dd7619b8fedd9",
+    "levels": 129
+   },
+   "180/75/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:370084a02c20c42c9f35657961eaa40fa51394d3bad1d7fa9239ddd8e042dfea",
+    "levels": 138
+   },
+   "180/76/150ND(36S,6NG),150ND(34S,4NG)": {
+    "digest": "sha256:0632621a007f387224bd23d9626d7b12668ceacedf440c3bc06a09956bd4153b",
+    "levels": 118
+   },
+   "180/76/150ND(36S,6NG): DELAYED": {
+    "digest": "sha256:fc9a6b6fe6ccd1d3bf88a046101e878af232c5eced5919222775a4f11ba3d4bf",
+    "levels": 36
+   },
+   "180/76/166ER(18O,4NG),168ER(16O,4NG)": {
+    "digest": "sha256:37a09ee93c34796cb67f9fd8f9c4d4ee62736ff39c4ce85fd379bc46fd1c3a19",
+    "levels": 121
+   },
+   "180/76/169TM(14N,3NG)": {
+    "digest": "sha256:3e05bee5aa22a0c4764429653492d98c14b07ad952fde01ee38d1c64d666bc0a",
+    "levels": 8
+   },
+   "180/76/48TI(136XE,4NG)": {
+    "digest": "sha256:6886cf54c7ff4bb9e1504d9d89594aa670b2a60e608ca79a4ab54ae32d3a1e99",
+    "levels": 15
+   },
+   "180/76/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:76551cc8b3e53a671c8d8367c0c02a23746ad0842cf5fe32a58084db26b584e5",
+    "levels": 139
+   },
+   "180/77/154SM(31P,5NG)": {
+    "digest": "sha256:d57142793e7d74e36fbe2f7506a0e5e77c63f410526baf016d374fc0f5897156",
+    "levels": 80
+   },
+   "180/77/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:93764b19f41bce6e32e43fedc4dc0bd393daae5359bad7d3b0b803c252f4de5f",
+    "levels": 84
+   },
+   "180/78/(HI,XNG)": {
+    "digest": "sha256:2203dfc545feace42e952f04e7a0f86c9310768638fca86b16e73825936df042",
+    "levels": 85
+   },
+   "180/78/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:733fe9c6de12f118c8265d13014c92bf37495110af029de614a9da66f0870b68",
+    "levels": 93
+   },
+   "180/79/ADOPTED LEVELS": {
+    "digest": "sha256:bdb8c9767d3e28de430b45be57187316266f0e7658dc16751218f8fd6a7007bb",
+    "levels": 1
+   },
+   "180/80/144SM(39K,P2NG)": {
+    "digest": "sha256:8ffe49de2e6a17180f37b1b874b5cfe95eeeaafe7a3cf5e294b0768f49aab9d1",
+    "levels": 9
+   },
+   "180/80/147SM(36AR,3NG)": {
+    "digest": "sha256:2b08469735df10ff23ec6ebe180780121a9aac5a13bf1c0ba1183f1be1bb7cb7",
+    "levels": 8
+   },
+   "180/80/90ZR(90ZR,G)": {
+    "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "levels": 0
+   },
+   "180/80/92ZR(90ZR,2NG)": {
+    "digest": "sha256:6fc8671c76783d94d858328828695717b7b19b02068ac8c7257b2402d0f57b5e",
+    "levels": 38
+   },
+   "180/80/94MO(88SR,2NG)": {
+    "digest": "sha256:729f8fb5eb3172244f6766dbbebe61e7d948d8ed8f418535ac4d2836c682e635",
+    "levels": 10
+   },
+   "180/80/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:1cba17d474ac7178f86966fd557346734e5f84e5907b8b91a4b5e0e1814e5131",
+    "levels": 48
+   },
+   "180/81/ADOPTED LEVELS": {
+    "digest": "sha256:3ef0e3c890b40a26a01507b78b057eb799b8f6e77609f391ed2f1ad0888c4ca8",
+    "levels": 1
+   },
+   "180/82/92MO(90ZR,2NG)": {
+    "digest": "sha256:37420a86652d2027cc72d6fc4b089a6eb40420ed64f687a124d7142f88e594f1",
+    "levels": 5
+   },
+   "180/82/ADOPTED LEVELS, GAMMAS": {
+    "digest": "sha256:812a073b65c02940d606bce470a0b66c8dbe5f606a4500cf9658400946b96604",
+    "levels": 5
+   },
+   "180/None/COMMENTS": {
+    "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "levels": 0
+   },
+   "180/None/REFERENCES": {
+    "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "levels": 0
+   }
+  },
+  "levels_excluded_as_divergent": 0
+ },
+ "excerpt": {
+  "known_divergences": [],
+  "levels": [
+   {
+    "energy": 0.0,
+    "energy_unc": null,
+    "jpi": [
+     [
+      2,
+      1
+     ]
+    ],
+    "jpi_raw": "1+",
+    "metastable": false,
+    "xref": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "F",
+     "H",
+     "I",
+     "J"
+    ]
+   },
+   {
+    "energy": 39.54,
+    "energy_unc": 0.05,
+    "jpi": [
+     [
+      4,
+      1
+     ]
+    ],
+    "jpi_raw": "2+",
+    "metastable": false,
+    "xref": [
+     "B",
+     "C",
+     "D",
+     "H",
+     "I",
+     "J"
+    ]
+   },
+   {
+    "energy": 77.2,
+    "energy_unc": 1.2000000000000002,
+    "jpi": [
+     [
+      18,
+      -1
+     ]
+    ],
+    "jpi_raw": "9-",
+    "metastable": true,
+    "xref": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "F",
+     "G",
+     "I"
+    ]
+   },
+   {
+    "energy": 107.78,
+    "energy_unc": 0.04,
+    "jpi": [
+     [
+      0,
+      -1
+     ]
+    ],
+    "jpi_raw": "0-",
+    "metastable": false,
+    "xref": [
+     "B",
+     "D"
+    ]
+   },
+   {
+    "energy": 110.75,
+    "energy_unc": 0.06,
+    "jpi": [
+     [
+      6,
+      1
+     ]
+    ],
+    "jpi_raw": "3+",
+    "metastable": false,
+    "xref": [
+     "B",
+     "C",
+     "D",
+     "H",
+     "I",
+     "J"
+    ]
+   },
+   {
+    "energy": 130.38,
+    "energy_unc": 0.07,
+    "jpi": [
+     [
+      2,
+      -1
+     ]
+    ],
+    "jpi_raw": "1-",
+    "metastable": false,
+    "xref": [
+     "B",
+     "C",
+     "D"
+    ]
+   },
+   {
+    "energy": 519.0,
+    "energy_unc": 1.0,
+    "jpi": [
+     [
+      10,
+      null
+     ]
+    ],
+    "jpi_raw": "(5)",
+    "metastable": false,
+    "xref": [
+     "B",
+     "D"
+    ]
+   },
+   {
+    "energy": 559.5,
+    "energy_unc": 0.05,
+    "jpi": [
+     [
+      4,
+      1
+     ]
+    ],
+    "jpi_raw": "(2+)",
+    "metastable": false,
+    "xref": [
+     "C",
+     "D"
+    ]
+   },
+   {
+    "energy": 575.8,
+    "energy_unc": 0.13,
+    "jpi": [
+     [
+      16,
+      1
+     ]
+    ],
+    "jpi_raw": "(8+)",
+    "metastable": false,
+    "xref": [
+     "B",
+     "C",
+     "D"
+    ]
+   }
+  ]
+ }
+}
