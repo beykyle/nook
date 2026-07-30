@@ -1,0 +1,86 @@
+# Lint, type check, and test. Jobs that don't need the RIPL-3 mirror use a
+# sparse checkout so the 1 GB of data/ never leaves the server; test-mirror
+# is the one full checkout, and it alone runs the mirror-gated tests.
+# ENSDF-gated tests always skip in CI: the flat files are not redistributable.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            src
+            tests
+            tools
+            demos
+            docs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install ruff==0.16.1
+      - run: ruff check .
+      - run: ruff format --check .
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            src
+            tests
+            tools
+            demos
+            docs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      # [tool.pyright] resolves imports against ./.venv, so build the venv
+      # it expects rather than overriding the config in CI
+      - run: python -m venv .venv && .venv/bin/pip install -e '.[dev]'
+      - run: pip install pyright==1.1.411
+      - run: pyright
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            src
+            tests
+            tools
+            demos
+            docs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e '.[dev]'
+      # without data/ the mirror-gated tests skip; this is the fast path
+      - run: pytest
+
+  test-mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 # full checkout: brings the RIPL-3 mirror
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -e '.[dev]'
+      - run: pytest
