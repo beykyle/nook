@@ -19,9 +19,7 @@ from nook.sources.ensdf_file import ENSDFFileSource, parse_ensdf_text
 # --------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize(
-    "text", ["24Mg", "Mg24", "Mg-24", "mg_24", "24MG", " 24 mg "]
-)
+@pytest.mark.parametrize("text", ["24Mg", "Mg24", "Mg-24", "mg_24", "24MG", " 24 mg "])
 def test_nuclide_parsing_accepts_common_spellings(text):
     assert el.Nuclide.parse(text) == el.Nuclide(12, 24)
 
@@ -181,9 +179,7 @@ def test_half_life_from_level_width():
     assert hl.width_mev.value == pytest.approx(0.065)
     assert hl.seconds.value == pytest.approx(HBAR_LN2_MEV_S / 0.065)
     # a larger width means a shorter life: the error branches swap over
-    assert hl.seconds.plus == pytest.approx(
-        hl.seconds.value * 0.005 / 0.065
-    )
+    assert hl.seconds.plus == pytest.approx(hl.seconds.value * 0.005 / 0.065)
 
 
 # --------------------------------------------------------------------------
@@ -605,7 +601,7 @@ def test_division_swaps_the_denominator_branches():
     """A denominator fluctuating up pushes the quotient down."""
     z = divide(el.Uncertain(10.0, 0.0, 0.0), el.Uncertain(2.0, 0.4, 0.2))
     assert z.value == pytest.approx(5.0)
-    assert z.plus == pytest.approx(5.0 * 0.1)   # from the -0.2 branch
+    assert z.plus == pytest.approx(5.0 * 0.1)  # from the -0.2 branch
     assert z.minus == pytest.approx(5.0 * 0.2)  # from the +0.4 branch
 
 
@@ -613,7 +609,7 @@ def test_division_swaps_the_denominator_branches():
     "a_op,b_op,expected",
     [
         ("LE", "LE", "LE"),
-        ("LT", "LE", "LT"),   # strictness is contagious
+        ("LT", "LE", "LT"),  # strictness is contagious
         ("GE", "GE", "GE"),
         ("LE", None, "LE"),
         (None, None, None),
@@ -630,7 +626,10 @@ def test_opposing_limits_give_no_bound():
     z = multiply(el.Uncertain(3.0, operator="LE"), el.Uncertain(2.0, operator="GE"))
     assert z.value is None and "unbounded" in z.raw
     # dividing by an upper limit also inverts to a lower bound
-    assert divide(el.Uncertain(3.0, operator="LE"), el.Uncertain(2.0, operator="LE")).value is None
+    assert (
+        divide(el.Uncertain(3.0, operator="LE"), el.Uncertain(2.0, operator="LE")).value
+        is None
+    )
 
 
 def test_quality_flags_degrade_to_the_weakest_claim():
@@ -818,8 +817,8 @@ def test_duplicate_csv_columns_stay_distinguishable(tmp_path):
         cache=el.Cache(tmp_path), opener=lambda u, t: f"{header}\n{row}\n"
     )
     level = source.fetch(el.Nuclide.parse("180Ta"), with_gammas=False).levels[0]
-    assert level.raw["unc_hl"] == "7"      # native units
-    assert level.raw["unc_hl.1"] == "25"   # seconds
+    assert level.raw["unc_hl"] == "7"  # native units
+    assert level.raw["unc_hl.1"] == "25"  # seconds
     assert level.half_life.seconds.symmetric == pytest.approx(25)
 
 
@@ -832,7 +831,7 @@ def test_ragged_csv_rows_do_not_abort_the_parse(tmp_path):
 
 
 def test_strict_mode_refuses_to_treat_a_blank_uncertainty_as_zero():
-    exact = el.Uncertain(10.0)                 # no uncertainty quoted
+    exact = el.Uncertain(10.0)  # no uncertainty quoted
     measured = el.Uncertain(2.0, 0.2, 0.2)
     assert not exact.uncertainty_known
     assert multiply(exact, measured).symmetric == pytest.approx(2.0)
@@ -857,17 +856,24 @@ def test_cli_runs_end_to_end(tmp_path, capsys):
     from nook.cli import main
 
     (tmp_path / "ensdf.024").write_text(ENSDF_FIXTURE)
-    code = main(["24Mg", "--source", "file", "--path", str(tmp_path), "--below", "5000"])
+    code = main(
+        ["24Mg", "--source", "file", "--path", str(tmp_path), "--below", "5000"]
+    )
     assert code == 0
     assert "1368.67" in capsys.readouterr().out
 
-    code = main(["24Mg", "--source", "file", "--path", str(tmp_path), "--dataset", "NOPE"])
+    code = main(
+        ["24Mg", "--source", "file", "--path", str(tmp_path), "--dataset", "NOPE"]
+    )
     assert code == 1  # a missing dataset is an error, not a traceback
 
 
 def test_a_band_may_be_used_without_being_defined(ta180):
     """Evaluators do not always document every flag they use."""
-    undocumented = '180TA  L 500.0     105+                                                     Z' + "\n"
+    undocumented = (
+        "180TA  L 500.0     105+                                                     Z"
+        + "\n"
+    )
     scheme = parse_ensdf_text(BAND_FIXTURE + undocumented)[0].to_scheme()
     assert "Z" in scheme.bands()
     assert scheme.band_definition("Z") is None
@@ -963,7 +969,5 @@ def test_band_parsing_failure_would_break_the_invariant():
     """The invariant must actually be sensitive to a mis-decode."""
     corrupted = {"X": "K\u03c0=5+ band. Configuration=\u03c07/2[404]\u03bd9/2[624]"}
     grouped = _two_quasiparticle_bands(corrupted)
-    label, k, parity, ((wp, _), (wn, _)) = grouped[
-        "\u03c07/2[404]\u03bd9/2[624]"
-    ][0]
+    label, k, parity, ((wp, _), (wn, _)) = grouped["\u03c07/2[404]\u03bd9/2[624]"][0]
     assert k not in {abs(wp - wn), wp + wn}  # 5 is neither 1 nor 8

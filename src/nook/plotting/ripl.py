@@ -49,7 +49,8 @@ def _data_labels(ax) -> list:
     headers pinned in axes coordinates must stay out of its hands.
     """
     return [
-        t for t in ax.texts
+        t
+        for t in ax.texts
         if t.get_text().strip() and t.get_transform() is ax.transData
     ]
 
@@ -90,8 +91,10 @@ def plot_gdr(
     if not entries:
         raise ValueError("no GDR entries to draw")
     drawable = [
-        e for e in entries
-        if e.kind == kind and e.peaks
+        e
+        for e in entries
+        if e.kind == kind
+        and e.peaks
         and all(cs is not None and cs.value for (_e, _w, cs) in e.peaks)
     ]
     if not drawable:
@@ -108,27 +111,49 @@ def plot_gdr(
 
         def total(entry, e: float) -> float:
             return sum(
-                _slo(e, pe.value, pw.value, pcs.value)
-                for pe, pw, pcs in entry.peaks
+                _slo(e, pe.value, pw.value, pcs.value) for pe, pw, pcs in entry.peaks
             )
 
         for entry in drawable[1:]:
-            ax.plot(xs, [total(entry, e) for e in xs], color=PALETTE.rule,
-                    linewidth=0.9, zorder=1)
+            ax.plot(
+                xs,
+                [total(entry, e) for e in xs],
+                color=PALETTE.rule,
+                linewidth=0.9,
+                zorder=1,
+            )
 
         primary = drawable[0]
         hues = (PALETTE.positive, PALETTE.negative, PALETTE.isomer)
         for i, (pe, pw, pcs) in enumerate(primary.peaks):
-            ax.plot(xs, [_slo(e, pe.value, pw.value, pcs.value) for e in xs],
-                    color=hues[i % len(hues)], linewidth=1.1, linestyle="--",
-                    zorder=2)
+            ax.plot(
+                xs,
+                [_slo(e, pe.value, pw.value, pcs.value) for e in xs],
+                color=hues[i % len(hues)],
+                linewidth=1.1,
+                linestyle="--",
+                zorder=2,
+            )
             peak_y = total(primary, pe.value)
-            ax.text(pe.value, peak_y * 1.03,
-                    rf"$E_0={pe.value:.1f}$, $\Gamma={pw.value:.1f}$ MeV",
-                    ha="center", va="bottom", fontsize=8,
-                    family="sans-serif", color=PALETTE.ink, bbox=HALO, zorder=5)
-        ax.plot(xs, [total(primary, e) for e in xs], color=PALETTE.ink,
-                linewidth=1.8, zorder=3)
+            ax.text(
+                pe.value,
+                peak_y * 1.03,
+                rf"$E_0={pe.value:.1f}$, $\Gamma={pw.value:.1f}$ MeV",
+                ha="center",
+                va="bottom",
+                fontsize=8,
+                family="sans-serif",
+                color=PALETTE.ink,
+                bbox=HALO,
+                zorder=5,
+            )
+        ax.plot(
+            xs,
+            [total(primary, e) for e in xs],
+            color=PALETTE.ink,
+            linewidth=1.8,
+            zorder=3,
+        )
 
         ax.set_xlim(xs[0], xs[-1])
         ax.set_ylim(bottom=0)
@@ -142,8 +167,15 @@ def plot_gdr(
         note = f"{kind}, {primary.reference}"
         if len(drawable) > 1:
             note += f"  (+{len(drawable) - 1} more evaluations)"
-        ax.text(0, 1.005, note, transform=ax.transAxes, fontsize=8,
-                color=PALETTE.unknown, family="sans-serif")
+        ax.text(
+            0,
+            1.005,
+            note,
+            transform=ax.transAxes,
+            fontsize=8,
+            color=PALETTE.unknown,
+            family="sans-serif",
+        )
         separate_labels(fig, ax, _data_labels(ax))
     return fig, ax
 
@@ -168,22 +200,42 @@ def plot_gsf(
 
     with figure_style():
         fig, ax = plt.subplots(figsize=figsize)
-        ax.semilogy([e for e, _ in rows], [f for _, f in rows],
-                    color=PALETTE.ink, linewidth=1.6, zorder=3)
+        ax.semilogy(
+            [e for e, _ in rows],
+            [f for _, f in rows],
+            color=PALETTE.ink,
+            linewidth=1.6,
+            zorder=3,
+        )
         if sn_kev is not None:
             sn = sn_kev / 1000.0
-            ax.axvline(sn, color=PALETTE.rule, linewidth=0.8,
-                       linestyle="--", zorder=1)
-            ax.text(sn, rows[-1][1], r"$S_n$", ha="left", va="bottom",
-                    fontsize=9, color=PALETTE.unknown, bbox=HALO, zorder=5)
+            ax.axvline(sn, color=PALETTE.rule, linewidth=0.8, linestyle="--", zorder=1)
+            ax.text(
+                sn,
+                rows[-1][1],
+                r"$S_n$",
+                ha="left",
+                va="bottom",
+                fontsize=9,
+                color=PALETTE.unknown,
+                bbox=HALO,
+                zorder=5,
+            )
         ax.set_xlim(left=0)
         ax.set_xlabel("photon energy (MeV)")
         ax.set_ylabel(r"$f_{E1}$  (mb/MeV)")
         for side in ("top", "right"):
             ax.spines[side].set_visible(False)
         ax.set_title(title or f"{table.nuclide}  E1 strength", loc="left", pad=12)
-        ax.text(0, 1.005, "HFB+QRPA microscopic table", transform=ax.transAxes,
-                fontsize=8, color=PALETTE.unknown, family="sans-serif")
+        ax.text(
+            0,
+            1.005,
+            "HFB+QRPA microscopic table",
+            transform=ax.transAxes,
+            fontsize=8,
+            color=PALETTE.unknown,
+            family="sans-serif",
+        )
     return fig, ax
 
 
@@ -227,59 +279,95 @@ def plot_level_density(
     a_parity = table.nuclide.a % 2
     for two_j in two_js:
         if (two_j - a_parity) % 2:
-            raise ValueError(
-                f"two_j={two_j} is impossible for A={table.nuclide.a}"
-            )
+            raise ValueError(f"two_j={two_j} is impossible for A={table.nuclide.a}")
 
     with figure_style():
         fig, (ax_rho, ax_cum) = plt.subplots(
-            2, 1, sharex=True, figsize=figsize,
+            2,
+            1,
+            sharex=True,
+            figsize=figsize,
             gridspec_kw={"height_ratios": [3, 2], "hspace": 0.08},
         )
 
         # -- density panel ---------------------------------------------------
         for parity in sorted(table.grids, reverse=True):
             rows = [
-                (row[0], row[3]) for row in table.grids[parity]
+                (row[0], row[3])
+                for row in table.grids[parity]
                 if row[3] > 0 and row[0] <= max_energy_mev
             ]
             if not rows:
                 continue
             colour = PALETTE.for_parity(parity)
-            ax_rho.semilogy([u for u, _ in rows], [r for _, r in rows],
-                            color=colour, linewidth=1.6, zorder=3)
+            ax_rho.semilogy(
+                [u for u, _ in rows],
+                [r for _, r in rows],
+                color=colour,
+                linewidth=1.6,
+                zorder=3,
+            )
             sign = "+" if parity > 0 else "-"
-            ax_rho.text(rows[-1][0], rows[-1][1], rf"  $\pi={sign}$",
-                        ha="left", va="center", fontsize=9, color=colour,
-                        bbox=HALO, zorder=5)
+            ax_rho.text(
+                rows[-1][0],
+                rows[-1][1],
+                rf"  $\pi={sign}$",
+                ha="left",
+                va="center",
+                fontsize=9,
+                color=colour,
+                bbox=HALO,
+                zorder=5,
+            )
         for two_j in two_js:
             column = 5 + (two_j - a_parity) // 2
             rows = [
-                (u, r) for u, r in _column_totals(table.grids, column)
+                (u, r)
+                for u, r in _column_totals(table.grids, column)
                 if r > 0 and u <= max_energy_mev
             ]
             if not rows:
                 continue
-            ax_rho.semilogy([u for u, _ in rows], [r for _, r in rows],
-                            color=PALETTE.unknown, linewidth=0.8, zorder=2)
+            ax_rho.semilogy(
+                [u for u, _ in rows],
+                [r for _, r in rows],
+                color=PALETTE.unknown,
+                linewidth=0.8,
+                zorder=2,
+            )
             spin = f"{two_j}/2" if a_parity else f"{two_j // 2}"
-            ax_rho.text(rows[-1][0], rows[-1][1], rf"  $J={spin}$",
-                        ha="left", va="center", fontsize=8,
-                        color=PALETTE.unknown, bbox=HALO, zorder=5)
+            ax_rho.text(
+                rows[-1][0],
+                rows[-1][1],
+                rf"  $J={spin}$",
+                ha="left",
+                va="center",
+                fontsize=8,
+                color=PALETTE.unknown,
+                bbox=HALO,
+                zorder=5,
+            )
         ax_rho.set_ylabel(r"$\rho$  (MeV$^{-1}$)")
 
         # -- cumulative panel ------------------------------------------------
         nmax_energy = None
         if scheme is not None:
             levels = [
-                lv for lv in scheme.levels
+                lv
+                for lv in scheme.levels
                 if lv.energy_kev is not None and not lv.is_floating
             ]
             if levels:
                 energies = sorted(lv.energy_kev / 1000.0 for lv in levels)
                 steps = [e for e in energies if e <= max_energy_mev]
-                ax_cum.step(steps, range(1, len(steps) + 1), where="post",
-                            color=PALETTE.ink, linewidth=1.4, zorder=3)
+                ax_cum.step(
+                    steps,
+                    range(1, len(steps) + 1),
+                    where="post",
+                    color=PALETTE.ink,
+                    linewidth=1.4,
+                    zorder=3,
+                )
                 nmax = scheme.metadata.get("nmax")
                 if nmax and nmax <= len(energies):
                     nmax_energy = energies[nmax - 1]
@@ -287,31 +375,70 @@ def plot_level_density(
             u0 = ct.u0_mev or 0.0
             xs = _grid(max(0.0, u0), max_energy_mev, 200)
             ax_cum.semilogy(
-                xs, [math.exp((u - u0) / ct.temperature_mev) for u in xs],
-                color=PALETTE.isomer, linewidth=1.2, linestyle="--", zorder=2,
+                xs,
+                [math.exp((u - u0) / ct.temperature_mev) for u in xs],
+                color=PALETTE.isomer,
+                linewidth=1.2,
+                linestyle="--",
+                zorder=2,
             )
-            ax_cum.text(xs[-1], math.exp((xs[-1] - u0) / ct.temperature_mev),
-                        "  CT", ha="left", va="center", fontsize=8,
-                        color=PALETTE.isomer, bbox=HALO, zorder=5)
+            ax_cum.text(
+                xs[-1],
+                math.exp((xs[-1] - u0) / ct.temperature_mev),
+                "  CT",
+                ha="left",
+                va="center",
+                fontsize=8,
+                color=PALETTE.isomer,
+                bbox=HALO,
+                zorder=5,
+            )
         hfb_cum = [
-            (u, n) for u, n in _column_totals(table.grids, 2)
+            (u, n)
+            for u, n in _column_totals(table.grids, 2)
             if n > 0 and u <= max_energy_mev
         ]
         if hfb_cum:
-            ax_cum.semilogy([u for u, _ in hfb_cum], [n for _, n in hfb_cum],
-                            color=PALETTE.unknown, linewidth=1.2,
-                            linestyle=":", zorder=2)
-            ax_cum.text(hfb_cum[-1][0], hfb_cum[-1][1], "  HFB",
-                        ha="left", va="center", fontsize=8,
-                        color=PALETTE.unknown, bbox=HALO, zorder=5)
+            ax_cum.semilogy(
+                [u for u, _ in hfb_cum],
+                [n for _, n in hfb_cum],
+                color=PALETTE.unknown,
+                linewidth=1.2,
+                linestyle=":",
+                zorder=2,
+            )
+            ax_cum.text(
+                hfb_cum[-1][0],
+                hfb_cum[-1][1],
+                "  HFB",
+                ha="left",
+                va="center",
+                fontsize=8,
+                color=PALETTE.unknown,
+                bbox=HALO,
+                zorder=5,
+            )
         if nmax_energy is not None:
             for panel in (ax_rho, ax_cum):
-                panel.axvline(nmax_energy, color=PALETTE.rule, linewidth=0.8,
-                              linestyle="--", zorder=1)
-            ax_cum.text(nmax_energy, 1.15, r"  complete to $N_{max}$",
-                        ha="left", va="bottom", fontsize=8,
-                        color=PALETTE.unknown, family="sans-serif",
-                        bbox=HALO, zorder=5)
+                panel.axvline(
+                    nmax_energy,
+                    color=PALETTE.rule,
+                    linewidth=0.8,
+                    linestyle="--",
+                    zorder=1,
+                )
+            ax_cum.text(
+                nmax_energy,
+                1.15,
+                r"  complete to $N_{max}$",
+                ha="left",
+                va="bottom",
+                fontsize=8,
+                color=PALETTE.unknown,
+                family="sans-serif",
+                bbox=HALO,
+                zorder=5,
+            )
 
         ax_cum.set_xlim(0, max_energy_mev * 1.12)
         ax_cum.set_xlabel("excitation energy (MeV)")
@@ -319,11 +446,17 @@ def plot_level_density(
         for panel in (ax_rho, ax_cum):
             for side in ("top", "right"):
                 panel.spines[side].set_visible(False)
-        ax_rho.set_title(title or f"{table.nuclide}  level density",
-                         loc="left", pad=12)
-        ax_rho.text(0, 1.005, "HFB+combinatorial table, by parity",
-                    transform=ax_rho.transAxes, fontsize=8,
-                    color=PALETTE.unknown, family="sans-serif", bbox=HALO)
+        ax_rho.set_title(title or f"{table.nuclide}  level density", loc="left", pad=12)
+        ax_rho.text(
+            0,
+            1.005,
+            "HFB+combinatorial table, by parity",
+            transform=ax_rho.transAxes,
+            fontsize=8,
+            color=PALETTE.unknown,
+            family="sans-serif",
+            bbox=HALO,
+        )
         for panel in (ax_rho, ax_cum):
             separate_labels(fig, panel, _data_labels(panel))
     return fig, (ax_rho, ax_cum)
@@ -363,17 +496,31 @@ def plot_matter_density(
             ax.plot(radii, values, color=colour, linewidth=1.6, zorder=3)
             # label over the flat interior, clear of the surface fall-off
             anchor_r = 0.25 * edge
-            anchor_v = values[min(range(len(radii)),
-                                  key=lambda i: abs(radii[i] - anchor_r))]
-            ax.text(anchor_r, anchor_v + offset * central * 0.02, label,
-                    ha="center", va="bottom" if offset > 0 else "top",
-                    fontsize=10, color=colour, bbox=HALO, zorder=5)
-            half = next(
-                (r for r, v in zip(radii, values) if v < values[0] / 2), None
+            anchor_v = values[
+                min(range(len(radii)), key=lambda i: abs(radii[i] - anchor_r))
+            ]
+            ax.text(
+                anchor_r,
+                anchor_v + offset * central * 0.02,
+                label,
+                ha="center",
+                va="bottom" if offset > 0 else "top",
+                fontsize=10,
+                color=colour,
+                bbox=HALO,
+                zorder=5,
             )
+            half = next((r for r, v in zip(radii, values) if v < values[0] / 2), None)
             if half is not None:
-                ax.plot([half], [0], marker=2, markersize=7, color=colour,
-                        clip_on=False, zorder=4)
+                ax.plot(
+                    [half],
+                    [0],
+                    marker=2,
+                    markersize=7,
+                    color=colour,
+                    clip_on=False,
+                    zorder=4,
+                )
 
         ax.set_xlim(0, edge * 1.15)
         ax.set_ylim(bottom=0)
@@ -381,13 +528,19 @@ def plot_matter_density(
         ax.set_ylabel(r"$\rho$  (fm$^{-3}$)")
         for side in ("top", "right"):
             ax.spines[side].set_visible(False)
-        ax.set_title(title or f"{density.nuclide}  matter density",
-                     loc="left", pad=12)
+        ax.set_title(title or f"{density.nuclide}  matter density", loc="left", pad=12)
         note = "HFB-14, spherically averaged"
         if density.beta2 is not None:
             note += rf"  ($\beta_2 = {density.beta2:.2f}$)"
-        ax.text(0, 1.005, note, transform=ax.transAxes, fontsize=8,
-                color=PALETTE.unknown, family="sans-serif")
+        ax.text(
+            0,
+            1.005,
+            note,
+            transform=ax.transAxes,
+            fontsize=8,
+            color=PALETTE.unknown,
+            family="sans-serif",
+        )
         separate_labels(fig, ax, _data_labels(ax))
     return fig, ax
 
@@ -457,23 +610,48 @@ def plot_fission_barriers(
     with figure_style():
         fig, ax = plt.subplots(figsize=figsize)
         xs, ys, saddles, positions = _barrier_landscape(barriers)
-        ax.plot(xs, ys, color=PALETTE.ink, linewidth=1.8, zorder=3,
-                label=barriers.model)
+        ax.plot(
+            xs, ys, color=PALETTE.ink, linewidth=1.8, zorder=3, label=barriers.model
+        )
         if overlay is not None and overlay.barriers:
             oxs, oys, _saddles, _pos = _barrier_landscape(overlay, positions)
-            ax.plot(oxs, oys, color=PALETTE.unknown, linewidth=1.2,
-                    linestyle="--", zorder=2, label=overlay.model)
+            ax.plot(
+                oxs,
+                oys,
+                color=PALETTE.unknown,
+                linewidth=1.2,
+                linestyle="--",
+                zorder=2,
+                label=overlay.model,
+            )
             ax.legend(loc="upper right")
 
         for i, ((x, height), barrier) in enumerate(zip(saddles, barriers.barriers)):
             name = chr(ord("A") + i)
-            ax.text(x, height + 0.45, rf"$E_{name} = {height:.1f}$ MeV",
-                    ha="center", va="bottom", fontsize=9, color=PALETTE.ink,
-                    bbox=HALO, zorder=5)
+            ax.text(
+                x,
+                height + 0.45,
+                rf"$E_{name} = {height:.1f}$ MeV",
+                ha="center",
+                va="bottom",
+                fontsize=9,
+                color=PALETTE.ink,
+                bbox=HALO,
+                zorder=5,
+            )
             if barrier.symmetry:
-                ax.text(x, height + 0.05, barrier.symmetry, ha="center",
-                        va="bottom", fontsize=7, color=PALETTE.unknown,
-                        family="sans-serif", bbox=HALO, zorder=5)
+                ax.text(
+                    x,
+                    height + 0.05,
+                    barrier.symmetry,
+                    ha="center",
+                    va="bottom",
+                    fontsize=7,
+                    color=PALETTE.unknown,
+                    family="sans-serif",
+                    bbox=HALO,
+                    zorder=5,
+                )
 
         ax.axhline(0.0, color=PALETTE.rule, linewidth=0.6, zorder=0)
         top = max(b.height_mev.value or 0.0 for b in barriers.barriers)
@@ -483,13 +661,19 @@ def plot_fission_barriers(
         ax.set_ylabel("energy (MeV)")
         for side in ("top", "right"):
             ax.spines[side].set_visible(False)
-        ax.set_title(title or f"{barriers.nuclide}  fission barriers",
-                     loc="left", pad=12)
+        ax.set_title(
+            title or f"{barriers.nuclide}  fission barriers", loc="left", pad=12
+        )
         if barriers.pairing_gap_mev is not None:
-            ax.text(0, 1.005,
-                    rf"pairing gap $\Delta_f = {barriers.pairing_gap_mev:.2f}$ MeV",
-                    transform=ax.transAxes, fontsize=8,
-                    color=PALETTE.unknown, family="sans-serif")
+            ax.text(
+                0,
+                1.005,
+                rf"pairing gap $\Delta_f = {barriers.pairing_gap_mev:.2f}$ MeV",
+                transform=ax.transAxes,
+                fontsize=8,
+                color=PALETTE.unknown,
+                family="sans-serif",
+            )
         separate_labels(fig, ax, _data_labels(ax))
     return fig, ax
 
@@ -545,7 +729,9 @@ def plot_chart_panels(
     if not panels:
         raise ValueError("no panels to draw")
     values = [
-        v for _label, states in panels for s in states
+        v
+        for _label, states in panels
+        for s in states
         for v in [getattr(s, colour_by, None)]
         if v is not None and not (log and v <= 0)
     ]
@@ -562,15 +748,30 @@ def plot_chart_panels(
         vmin, vmax = ordered[margin], ordered[-1 - margin]
 
     with figure_style():
-        fig, axes = plt.subplots(len(panels), 1, figsize=figsize, sharex=True,
-                                 squeeze=False)
+        fig, axes = plt.subplots(
+            len(panels), 1, figsize=figsize, sharex=True, squeeze=False
+        )
         axes = tuple(axes.flat)
         for ax, (label, states) in zip(axes, panels):
-            plot_chart(states, colour_by=colour_by, log=log, ax=ax,
-                       vmin=vmin, vmax=vmax, colorbar=False)
+            plot_chart(
+                states,
+                colour_by=colour_by,
+                log=log,
+                ax=ax,
+                vmin=vmin,
+                vmax=vmax,
+                colorbar=False,
+            )
             ax.set_title("", loc="left")
-            ax.text(0, 1.005, label, transform=ax.transAxes, fontsize=8,
-                    color=PALETTE.unknown, family="sans-serif")
+            ax.text(
+                0,
+                1.005,
+                label,
+                transform=ax.transAxes,
+                fontsize=8,
+                color=PALETTE.unknown,
+                family="sans-serif",
+            )
         for ax in axes[:-1]:
             ax.set_xlabel("")
         mappable = axes[0].collections[0]
@@ -580,13 +781,15 @@ def plot_chart_panels(
             bar_label = rf"$\log_{{10}}$ {bar_label}"
         bar.set_label(bar_label, fontsize=9)
         bar.outline.set_visible(False)  # type: ignore[operator]
-        axes[0].set_title(title or f"{colour_by.replace('_', ' ')} by source",
-                          loc="left", pad=12)
+        axes[0].set_title(
+            title or f"{colour_by.replace('_', ' ')} by source", loc="left", pad=12
+        )
     return fig, axes
 
 
-def plot_mass_residuals(table, theories=("frdm95", "hfb14"),
-                        title: str | None = None, **panel_kwargs):
+def plot_mass_residuals(
+    table, theories=("frdm95", "hfb14"), title: str | None = None, **panel_kwargs
+):
     """Panels of theory-minus-experiment mass residuals, one per mass model.
 
     Only measured masses count as experiment (``recommended_only`` entries are
@@ -605,25 +808,31 @@ def plot_mass_residuals(table, theories=("frdm95", "hfb14"),
             if theoretical is None or exp is None or entry.recommended_only:
                 continue
             nuclide = entry.nuclide
-            states.append(_ChartState(
-                nuclide=nuclide, z=nuclide.z, n=nuclide.a - nuclide.z,
-                stable=entry.abundance is not None,
-                residual_kev=theoretical.value - exp,
-            ))
+            states.append(
+                _ChartState(
+                    nuclide=nuclide,
+                    z=nuclide.z,
+                    n=nuclide.a - nuclide.z,
+                    stable=entry.abundance is not None,
+                    residual_kev=theoretical.value - exp,
+                )
+            )
         if states:
-            panels.append((f"{theory}  ({len(states)} measured nuclides)",
-                           states))
+            panels.append((f"{theory}  ({len(states)} measured nuclides)", states))
     if not panels:
         raise ValueError("no nuclides with both measured and model masses to draw")
     return plot_chart_panels(
-        panels, colour_by="residual_kev", symmetric=True,
+        panels,
+        colour_by="residual_kev",
+        symmetric=True,
         title=title or "mass residuals against experiment",
         **panel_kwargs,
     )
 
 
-def plot_deformation_chart(table, theories=("frdm95", "hfb14"),
-                           title: str | None = None, **panel_kwargs):
+def plot_deformation_chart(
+    table, theories=("frdm95", "hfb14"), title: str | None = None, **panel_kwargs
+):
     """Panels of ground-state quadrupole deformation, one per mass model.
 
     Returns ``(fig, axes)`` with one axes per theory.
@@ -636,16 +845,23 @@ def plot_deformation_chart(table, theories=("frdm95", "hfb14"),
             if beta2 is None:
                 continue
             nuclide = entry.nuclide
-            states.append(_ChartState(
-                nuclide=nuclide, z=nuclide.z, n=nuclide.a - nuclide.z,
-                stable=entry.abundance is not None, beta2=beta2,
-            ))
+            states.append(
+                _ChartState(
+                    nuclide=nuclide,
+                    z=nuclide.z,
+                    n=nuclide.a - nuclide.z,
+                    stable=entry.abundance is not None,
+                    beta2=beta2,
+                )
+            )
         if states:
             panels.append((theory, states))
     if not panels:
         raise ValueError("no nuclides with a model deformation to draw")
     return plot_chart_panels(
-        panels, colour_by="beta2", symmetric=True,
+        panels,
+        colour_by="beta2",
+        symmetric=True,
         title=title or "ground-state deformation by mass model",
         **panel_kwargs,
     )
@@ -675,30 +891,35 @@ def plot_resonance_charts(
     panels = (
         ("spacing_kev", True, [e.spacing_kev.value for e in entries]),
         ("strength_1e4", False, [e.strength_1e4.value for e in entries]),
-        ("gamma_width_mev_milli", False,
-         [e.gamma_width_mev_milli.value for e in entries]),
+        (
+            "gamma_width_mev_milli",
+            False,
+            [e.gamma_width_mev_milli.value for e in entries],
+        ),
     )
     with figure_style():
         fig, axes = plt.subplots(3, 1, figsize=figsize, sharex=True)
         for ax, (quantity, log, values) in zip(axes, panels):
             states = [
                 _ChartState(
-                    nuclide=e.nuclide, z=e.nuclide.z,
+                    nuclide=e.nuclide,
+                    z=e.nuclide.z,
                     n=e.nuclide.a - e.nuclide.z,
                     **{quantity: value},
                 )
-                for e, value in zip(entries, values) if value is not None
+                for e, value in zip(entries, values)
+                if value is not None
             ]
-            plot_chart(states, colour_by=quantity, log=log, ax=ax,
-                       label_elements=False)
+            plot_chart(states, colour_by=quantity, log=log, ax=ax, label_elements=False)
             ax.set_title("", loc="left")
         for ax in axes[:-1]:
             ax.set_xlabel("")
         wave = entries[0].wave
         axes[0].set_title(
-            title or f"{'sp'[wave]}-wave resonance systematics "
-                     f"({len(entries)} targets)",
-            loc="left", pad=12,
+            title
+            or f"{'sp'[wave]}-wave resonance systematics ({len(entries)} targets)",
+            loc="left",
+            pad=12,
         )
     return fig, axes
 
@@ -726,8 +947,7 @@ def _ladder(values, gap: float, low: float, high: float) -> list[float]:
 
 def _comparison_side(matched_levels, only_levels, max_energy):
     levels = sorted(
-        (lv for lv in [*matched_levels, *only_levels]
-         if lv.energy_kev is not None),
+        (lv for lv in [*matched_levels, *only_levels] if lv.energy_kev is not None),
         key=lambda lv: lv.energy_kev,
     )
     if max_energy is not None:
@@ -776,9 +996,11 @@ def plot_level_comparison(
     import matplotlib.pyplot as plt
 
     a_levels = _comparison_side(
-        [m.a for m in comparison.matched], comparison.only_a, max_energy)
+        [m.a for m in comparison.matched], comparison.only_a, max_energy
+    )
     b_levels = _comparison_side(
-        [m.b for m in comparison.matched], comparison.only_b, max_energy)
+        [m.b for m in comparison.matched], comparison.only_b, max_energy
+    )
     if limit:
         a_levels = a_levels[:limit]
         b_levels = b_levels[:limit]
@@ -798,9 +1020,13 @@ def plot_level_comparison(
         for m in comparison.matched:
             if id(m.a) not in kept or id(m.b) not in kept:
                 continue
-            ax.plot([columns["a"][1], columns["b"][0]],
-                    [m.a.energy_kev, m.b.energy_kev],
-                    color=PALETTE.rule, linewidth=0.7, zorder=1)
+            ax.plot(
+                [columns["a"][1], columns["b"][0]],
+                [m.a.energy_kev, m.b.energy_kev],
+                color=PALETTE.rule,
+                linewidth=0.7,
+                zorder=1,
+            )
 
         only = {
             "a": {id(lv) for lv in comparison.only_a},
@@ -816,31 +1042,68 @@ def plot_level_comparison(
             jpi_x = 0.02 if side == "a" else right + 0.035
             align = "right"
             jpi_align = "left"
-            leader_x = (label_x if side == "a" else right + 0.03)
+            leader_x = label_x if side == "a" else right + 0.03
 
-            label_y = _ladder([lv.energy_kev for lv in levels], span * 0.032,
-                              low=-0.05 * span, high=1.03 * span)
+            label_y = _ladder(
+                [lv.energy_kev for lv in levels],
+                span * 0.032,
+                low=-0.05 * span,
+                high=1.03 * span,
+            )
             for level, y in zip(levels, label_y):
                 energy = level.energy_kev
                 colour = _level_colour(level)
-                ax.plot([left, right], [energy, energy], color=colour,
-                        linewidth=1.6, solid_capstyle="butt", zorder=3)
+                ax.plot(
+                    [left, right],
+                    [energy, energy],
+                    color=colour,
+                    linewidth=1.6,
+                    solid_capstyle="butt",
+                    zorder=3,
+                )
                 if id(level) in only[side]:
-                    ax.plot([edge, edge + outward * 0.025], [energy, energy],
-                            color=PALETTE.isomer, linewidth=2.4,
-                            solid_capstyle="butt", zorder=4)
+                    ax.plot(
+                        [edge, edge + outward * 0.025],
+                        [energy, energy],
+                        color=PALETTE.isomer,
+                        linewidth=2.4,
+                        solid_capstyle="butt",
+                        zorder=4,
+                    )
                 if abs(y - energy) > span * 0.004:
-                    ax.plot([leader_x + outward * 0.005, edge + outward * 0.008],
-                            [y, energy], color=PALETTE.rule, linewidth=0.5,
-                            zorder=1)
+                    ax.plot(
+                        [leader_x + outward * 0.005, edge + outward * 0.008],
+                        [y, energy],
+                        color=PALETTE.rule,
+                        linewidth=0.5,
+                        zorder=1,
+                    )
                 if side == "a" or id(level) in only[side]:
-                    ax.text(label_x, y, f"{energy:.1f}", va="center", ha=align,
-                            fontsize=8, color=PALETTE.ink, family="sans-serif",
-                            bbox=HALO, zorder=5)
+                    ax.text(
+                        label_x,
+                        y,
+                        f"{energy:.1f}",
+                        va="center",
+                        ha=align,
+                        fontsize=8,
+                        color=PALETTE.ink,
+                        family="sans-serif",
+                        bbox=HALO,
+                        zorder=5,
+                    )
                 label = jpi_label(level.spin_parity)
                 if label:
-                    ax.text(jpi_x, y, label, va="center", ha=jpi_align,
-                            fontsize=9, color=colour, bbox=HALO, zorder=5)
+                    ax.text(
+                        jpi_x,
+                        y,
+                        label,
+                        va="center",
+                        ha=jpi_align,
+                        fontsize=9,
+                        color=colour,
+                        bbox=HALO,
+                        zorder=5,
+                    )
 
         cutoffs = (
             ("a", comparison.cutoff_a, a_levels, "complete (heuristic)"),
@@ -851,18 +1114,39 @@ def plot_level_comparison(
                 continue
             energy = levels[cutoff - 1].energy_kev
             left, right = columns[side]
-            ax.plot([left - 0.02, right + 0.02], [energy, energy],
-                    color=PALETTE.rule, linewidth=0.9, linestyle="--", zorder=2)
-            ax.text((left + right) / 2, energy + 0.012 * span, note,
-                    ha="center", va="bottom", fontsize=7,
-                    color=PALETTE.unknown, family="sans-serif",
-                    bbox=HALO, zorder=5)
+            ax.plot(
+                [left - 0.02, right + 0.02],
+                [energy, energy],
+                color=PALETTE.rule,
+                linewidth=0.9,
+                linestyle="--",
+                zorder=2,
+            )
+            ax.text(
+                (left + right) / 2,
+                energy + 0.012 * span,
+                note,
+                ha="center",
+                va="bottom",
+                fontsize=7,
+                color=PALETTE.unknown,
+                family="sans-serif",
+                bbox=HALO,
+                zorder=5,
+            )
 
         for side, name in (("a", comparison.source_a), ("b", comparison.source_b)):
             left, right = columns[side]
-            ax.text((left + right) / 2, 1.005, name, transform=ax.transAxes,
-                    ha="center", fontsize=8, color=PALETTE.unknown,
-                    family="sans-serif")
+            ax.text(
+                (left + right) / 2,
+                1.005,
+                name,
+                transform=ax.transAxes,
+                ha="center",
+                fontsize=8,
+                color=PALETTE.unknown,
+                family="sans-serif",
+            )
 
         ax.set_xticks([])
         for side in ("top", "right", "bottom"):
@@ -877,8 +1161,16 @@ def plot_level_comparison(
             summary.append(
                 rf"$J^\pi$ agree {100 * comparison.jpi_agreement_fraction:.0f}%"
             )
-        ax.text(1.0, -0.015, "   ".join(summary), transform=ax.transAxes,
-                ha="right", va="top", fontsize=8, color=PALETTE.unknown,
-                bbox=HALO)
+        ax.text(
+            1.0,
+            -0.015,
+            "   ".join(summary),
+            transform=ax.transAxes,
+            ha="right",
+            va="top",
+            fontsize=8,
+            color=PALETTE.unknown,
+            bbox=HALO,
+        )
         separate_labels(fig, ax, _data_labels(ax))
     return fig, ax

@@ -6,7 +6,6 @@ import pytest
 
 import nook
 from nook.sources.ripl3.optical import _fortran_float, _parse_entry
-
 from test_ripl3 import needs_mirror
 
 # The first archive entry, verbatim (P.G.Young & E.D.Arthur, n + 237Np).
@@ -145,7 +144,9 @@ def test_commented_out_parameter_row_is_skipped(tmp_path):
     )
     clear_ripl_cache()
     source = nook.Ripl3Source(path=tmp_path)
-    assert source.level_density_params("58Co").spacing_kev.value == pytest.approx(1.3e-3)
+    assert source.level_density_params("58Co").spacing_kev.value == pytest.approx(
+        1.3e-3
+    )
     with pytest.raises(LookupError):
         source.level_density_params("57Fe")  # the commented row must not crash
 
@@ -171,9 +172,7 @@ def test_energy_filter_applies_without_nuclide():
     assert source.optical_potentials(projectile="n", energy_mev=2000.0) == ()
     at_14 = source.optical_potentials(projectile="n", energy_mev=14.0)
     assert at_14
-    assert all(
-        e.e_range_mev[0] <= 14.0 <= e.e_range_mev[1] for e in at_14
-    )
+    assert all(e.e_range_mev[0] <= 14.0 <= e.e_range_mev[1] for e in at_14)
 
 
 @needs_mirror

@@ -119,7 +119,9 @@ def parse_file(parser: Callable[..., _T], path: Path, *args) -> _T:
     hashable (both are part of the cache key).
     """
     stat = path.stat()
-    return _parse_cached(parser, str(path.resolve()), (stat.st_size, stat.st_mtime_ns), args)
+    return _parse_cached(
+        parser, str(path.resolve()), (stat.st_size, stat.st_mtime_ns), args
+    )
 
 
 def require_file(file: Path, what: str) -> None:

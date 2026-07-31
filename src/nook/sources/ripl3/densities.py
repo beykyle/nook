@@ -36,23 +36,67 @@ __all__ = [
 #: model name -> (filename, D0 scale to keV, column names after Z A El).
 _MODELS = {
     "egsm": (
-        "level-densities-egsm.dat", 1.0,
+        "level-densities-egsm.dat",
+        1.0,
         ("i0", "bn_mev", "d0", "d0_err", "esh_mev", "da_plus", "a", "da_minus"),
     ),
     "bfm": (
-        "level-densities-bfmeff.dat", 1e-3,
-        ("i0", "bn_mev", "d0", "d0_err", "nlow", "ulow", "ntop", "utop",
-         "dw", "gamma", "ainf", "aerr", "pairing"),
+        "level-densities-bfmeff.dat",
+        1e-3,
+        (
+            "i0",
+            "bn_mev",
+            "d0",
+            "d0_err",
+            "nlow",
+            "ulow",
+            "ntop",
+            "utop",
+            "dw",
+            "gamma",
+            "ainf",
+            "aerr",
+            "pairing",
+        ),
     ),
     "ctm": (
-        "level-densities-ctmeff.dat", 1e-3,
-        ("i0", "bn_mev", "d0", "d0_err", "nlow", "ulow", "ntop", "utop",
-         "dw", "gamma", "ainf", "aerr", "pairing", "ematch", "e0", "temperature"),
+        "level-densities-ctmeff.dat",
+        1e-3,
+        (
+            "i0",
+            "bn_mev",
+            "d0",
+            "d0_err",
+            "nlow",
+            "ulow",
+            "ntop",
+            "utop",
+            "dw",
+            "gamma",
+            "ainf",
+            "aerr",
+            "pairing",
+            "ematch",
+            "e0",
+            "temperature",
+        ),
     ),
     "hfm": (
-        "level-densities-hfm.dat", 1e-3,
-        ("i0", "bn_mev", "d0", "d0_err", "nlow", "ulow", "ntop", "utop",
-         "ctable", "deltac", "ptable"),
+        "level-densities-hfm.dat",
+        1e-3,
+        (
+            "i0",
+            "bn_mev",
+            "d0",
+            "d0_err",
+            "nlow",
+            "ulow",
+            "ntop",
+            "utop",
+            "ctable",
+            "deltac",
+            "ptable",
+        ),
     ),
 }
 
@@ -153,8 +197,9 @@ def load_level_density_params(
 ) -> LevelDensityParams:
     """The analytic-model parameters for one nuclide."""
     if model not in _MODELS:
-        raise ValueError(f"unknown level-density model {model!r}; "
-                         f"choose from {sorted(_MODELS)}")
+        raise ValueError(
+            f"unknown level-density model {model!r}; choose from {sorted(_MODELS)}"
+        )
     file = path / "densities" / _MODELS[model][0]
     require_file(file, "RIPL-3 level-density file")
     entry = parse_file(_parse_density_params, file, model).get((nuclide.z, nuclide.a))
@@ -165,7 +210,10 @@ def load_level_density_params(
 
 def _parse_hfb_tab(text: str) -> dict[tuple[int, int], dict[int, tuple]]:
     tables: dict[tuple[int, int], dict[int, tuple]] = {}
-    is_header = lambda line: line.lstrip().startswith("*") and "Level Density" in line
+
+    def is_header(line: str) -> bool:
+        return line.lstrip().startswith("*") and "Level Density" in line
+
     for z, a, header, body in z_blocks(text, is_header):
         parity = 1 if "Positive-Parity" in header else -1
         rows = []

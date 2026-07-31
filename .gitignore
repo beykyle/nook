@@ -11,6 +11,10 @@ build/
 .venv/
 venv/
 
+# Sphinx
+docs/_build/
+docs/api/generated/
+
 # Local ENSDF distribution and anything derived from it
 ensdf.[0-9][0-9][0-9]
 ground-state-survey.json

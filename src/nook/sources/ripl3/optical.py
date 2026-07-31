@@ -36,12 +36,22 @@ __all__ = [
 ]
 
 _COMPONENTS = (
-    "real_volume", "imag_volume", "real_surface",
-    "imag_surface", "real_spin_orbit", "imag_spin_orbit",
+    "real_volume",
+    "imag_volume",
+    "real_surface",
+    "imag_surface",
+    "real_spin_orbit",
+    "imag_spin_orbit",
 )
 
-_PROJECTILES = {(0, 1): "n", (1, 1): "p", (1, 2): "d", (1, 3): "t",
-                (2, 3): "3He", (2, 4): "a"}
+_PROJECTILES = {
+    (0, 1): "n",
+    (1, 1): "p",
+    (1, 2): "d",
+    (1, 3): "t",
+    (2, 3): "3He",
+    (2, 4): "a",
+}
 
 _FORTRAN_EXP = re.compile(r"^([+-]?\d*\.?\d+)([+-]\d+)$")
 
@@ -62,14 +72,14 @@ class PotentialRange:
     """One energy range of one component: geometry and strength coefficients."""
 
     e_max_mev: float
-    radius_coefficients: tuple[float, ...]       # rco, 13
+    radius_coefficients: tuple[float, ...]  # rco, 13
     diffuseness_coefficients: tuple[float, ...]  # aco, 13
-    strength_coefficients: tuple[float, ...]     # pot, 25
+    strength_coefficients: tuple[float, ...]  # pot, 25
 
 
 @dataclass(frozen=True)
 class PotentialComponent:
-    kind: str                     # one of _COMPONENTS
+    kind: str  # one of _COMPONENTS
     ranges: tuple[PotentialRange, ...]
     #: ``jrange`` was negative: coefficients give volume integrals instead
     #: of potential strengths.
@@ -81,14 +91,14 @@ class OpticalPotential:
     """One archive entry, applicability plus coefficient tables."""
 
     ripl_id: int
-    projectile: str               # "n", "p", ... or "Z=z,A=a" if exotic
+    projectile: str  # "n", "p", ... or "Z=z,A=a" if exotic
     author: str
     reference: str
     summary: str
     e_range_mev: tuple[float, float]
     z_range: tuple[int, int]
     a_range: tuple[int, int]
-    model: int                    # 0 spherical, 1 rigid rotor, 2 vibrational, 3 soft rotor
+    model: int  # 0 spherical, 1 rigid rotor, 2 vibrational, 3 soft rotor
     relativistic: int
     dispersive: int
     components: tuple[PotentialComponent, ...]
@@ -137,7 +147,7 @@ def _parse_entry(text: str) -> OpticalPotential:
 
     def take(count: int) -> list[float]:
         nonlocal pos
-        values = [_fortran_float(t) for t in tokens[pos:pos + count]]
+        values = [_fortran_float(t) for t in tokens[pos : pos + count]]
         if len(values) != count:
             raise ValueError(f"entry {ripl_id}: expected {count} more values")
         pos += count

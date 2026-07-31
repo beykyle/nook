@@ -96,7 +96,9 @@ class LivechartSource:
                 f"Livechart returned HTTP {exc.code} for {url}"
             ) from exc
         except urllib.error.URLError as exc:
-            raise LivechartError(f"cannot reach Livechart at {url}: {exc.reason}") from exc
+            raise LivechartError(
+                f"cannot reach Livechart at {url}: {exc.reason}"
+            ) from exc
 
     def _query(self, **params: str) -> str:
         url = f"{self.base_url}?{urllib.parse.urlencode(params)}"
@@ -134,7 +136,10 @@ class LivechartSource:
             names.append(name if counts[name] == 1 else f"{name}.{counts[name] - 1}")
         return [
             # not strict: a short or over-long row should not abort the parse
-            {name: (value or "").strip() for name, value in zip(names, row, strict=False)}
+            {
+                name: (value or "").strip()
+                for name, value in zip(names, row, strict=False)
+            }
             for row in reader
             if row
         ]
@@ -142,9 +147,7 @@ class LivechartSource:
     # -- public API ---------------------------------------------------------
 
     def levels(self, nuclide: Nuclide) -> list[dict[str, str]]:
-        return self._rows(
-            self._query(fields="levels", nuclides=nuclide.livechart_id())
-        )
+        return self._rows(self._query(fields="levels", nuclides=nuclide.livechart_id()))
 
     def gammas(self, nuclide: Nuclide) -> list[dict[str, str]]:
         try:
@@ -173,8 +176,7 @@ class LivechartSource:
         level_rows = self.levels(nuclide)
         gamma_rows = self.gammas(nuclide) if with_gammas else []
         levels = tuple(
-            _level_from_row(row, fallback_index=i)
-            for i, row in enumerate(level_rows)
+            _level_from_row(row, fallback_index=i) for i, row in enumerate(level_rows)
         )
         gammas = tuple(_gamma_from_row(row) for row in gamma_rows)
         metadata = {}
@@ -201,7 +203,9 @@ class LivechartSource:
 # --------------------------------------------------------------------------
 
 
-def _uncertain(row: dict[str, str], value_keys: Sequence[str], unc_keys: Sequence[str]) -> Uncertain:
+def _uncertain(
+    row: dict[str, str], value_keys: Sequence[str], unc_keys: Sequence[str]
+) -> Uncertain:
     """Build an :class:`Uncertain` from already-separated CSV columns.
 
     Unlike the flat files, Livechart gives absolute uncertainties, so the

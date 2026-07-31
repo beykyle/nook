@@ -100,7 +100,12 @@ class Uncertain:
         return ufloat(self.value, self.symmetric or 0.0)
 
     #: Rendered forms of the limit operators, for readability.
-    _SYMBOLS: ClassVar[dict[str, str]] = {"LT": "<", "LE": "\u2264", "GT": ">", "GE": "\u2265"}
+    _SYMBOLS: ClassVar[dict[str, str]] = {
+        "LT": "<",
+        "LE": "\u2264",
+        "GT": ">",
+        "GE": "\u2265",
+    }
 
     def __str__(self) -> str:
         if self.value is None:
@@ -397,7 +402,9 @@ class SpinParity:
                 return False
         if self.natural_parity is not None and parity is not None:
             natural = 1 if (two_j // 2) % 2 == 0 else -1
-            if two_j % 2 == 0 and parity != (natural if self.natural_parity else -natural):
+            if two_j % 2 == 0 and parity != (
+                natural if self.natural_parity else -natural
+            ):
                 return False
         if not self.candidates:
             return not self.excluded or True

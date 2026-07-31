@@ -109,11 +109,13 @@ class MassEntry:
             source="ripl3-local",
             metadata={
                 "mass_excess_frdm95_kev": (
-                    None if self.mass_excess_frdm95 is None
+                    None
+                    if self.mass_excess_frdm95 is None
                     else self.mass_excess_frdm95.value
                 ),
                 "mass_excess_hfb14_kev": (
-                    None if self.mass_excess_hfb14 is None
+                    None
+                    if self.mass_excess_hfb14 is None
                     else self.mass_excess_hfb14.value
                 ),
                 "beta2_frdm95": self.beta2_frdm95,
@@ -143,13 +145,21 @@ def _mev(value: float | None, err: float | None, raw: str) -> Uncertain | None:
 # is why the experimental mass is parsed from either file (710 nuclides exist
 # only in the HFB table).  They differ only in the trailing columns.
 _FRDM_EXTRAS = (
-    ("emic", 43, 53), ("beta2", 53, 61), ("beta3", 61, 69),
-    ("beta4", 69, 77), ("beta6", 77, 85),
+    ("emic", 43, 53),
+    ("beta2", 53, 61),
+    ("beta3", 61, 69),
+    ("beta4", 69, 77),
+    ("beta6", 77, 85),
 )
 _HFB_EXTRAS = (
-    ("beta2", 43, 51), ("beta4", 51, 59),
-    ("rhon", 59, 68), ("rn", 68, 77), ("an", 77, 86),
-    ("rhop", 86, 95), ("rp", 95, 104), ("ap", 104, 113),
+    ("beta2", 43, 51),
+    ("beta4", 51, 59),
+    ("rhon", 59, 68),
+    ("rn", 68, 77),
+    ("an", 77, 86),
+    ("rhop", 86, 95),
+    ("rp", 95, 104),
+    ("ap", 104, 113),
 )
 
 
@@ -203,8 +213,7 @@ def _build_entry(nuclide: Nuclide, frdm, hfb, abundance) -> MassEntry:
         mass_excess_frdm95=None if frdm is None else _mev(frdm["mth"], None, "FRDM95"),
         mass_excess_hfb14=None if hfb is None else _mev(hfb["mth"], None, "HFB-14"),
         emic_frdm95=(
-            None if frdm is None or frdm["emic"] is None
-            else frdm["emic"] * MEV_TO_KEV
+            None if frdm is None or frdm["emic"] is None else frdm["emic"] * MEV_TO_KEV
         ),
         beta2_frdm95=None if frdm is None else frdm["beta2"],
         beta3_frdm95=None if frdm is None else frdm["beta3"],
@@ -214,8 +223,11 @@ def _build_entry(nuclide: Nuclide, frdm, hfb, abundance) -> MassEntry:
         beta4_hfb14=None if hfb is None else hfb["beta4"],
         neutron_density_params=hfb_np,
         proton_density_params=hfb_pp,
-        abundance=None if abundance is None
-        else Uncertain(abundance[0], abundance[1], abundance[1], raw="RIPL-3 abundance"),
+        abundance=None
+        if abundance is None
+        else Uncertain(
+            abundance[0], abundance[1], abundance[1], raw="RIPL-3 abundance"
+        ),
     )
 
 
@@ -228,8 +240,7 @@ def _mass_tables(path: Path) -> tuple[dict, dict, dict]:
     hfb = parse_file(_parse_hfb, hfb_file) if hfb_file.is_file() else {}
     abundance_file = path / "masses" / "abundance.dat"
     abundance = (
-        parse_file(_parse_abundance, abundance_file)
-        if abundance_file.is_file() else {}
+        parse_file(_parse_abundance, abundance_file) if abundance_file.is_file() else {}
     )
     return frdm, hfb, abundance
 
@@ -247,8 +258,9 @@ def load_mass_table(path: Path) -> dict[tuple[int, int], MassEntry]:
     """Every nuclide across the mass tables, keyed ``(z, a)`` (bulk data)."""
     frdm, hfb, abundance = _mass_tables(path)
     return {
-        key: _build_entry(Nuclide(*key), frdm.get(key), hfb.get(key),
-                          abundance.get(key))
+        key: _build_entry(
+            Nuclide(*key), frdm.get(key), hfb.get(key), abundance.get(key)
+        )
         for key in sorted(frdm.keys() | hfb.keys())
     }
 
@@ -273,8 +285,13 @@ def _parse_matter_density_file(text: str) -> dict:
 
 def load_matter_density(path: Path, nuclide: Nuclide) -> MatterDensity:
     """The tabulated HFB-14 density profile for one nuclide (bulk data)."""
-    file = path / "masses" / "matter-densities-hfb14" / "density-hfb14" / \
-        f"z{nuclide.z:03d}.dat"
+    file = (
+        path
+        / "masses"
+        / "matter-densities-hfb14"
+        / "density-hfb14"
+        / f"z{nuclide.z:03d}.dat"
+    )
     require_file(file, "HFB-14 matter-density table")
     entry = parse_file(_parse_matter_density_file, file).get((nuclide.z, nuclide.a))
     if entry is None or not entry[1]:

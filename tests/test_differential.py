@@ -32,9 +32,8 @@ from pathlib import Path
 
 import pytest
 
-from _fingerprint import digest, divergence_reason, level_fingerprint
-
 import nook as el  # noqa: F401  (kept for parity with other modules)
+from _fingerprint import digest, divergence_reason, level_fingerprint
 from nook.sources.ensdf_file import parse_ensdf_text, place_gammas
 
 DATA = Path(__file__).parent / "data"
@@ -92,7 +91,9 @@ def test_level_agrees_with_the_oracle(adopted, i):
     if want["energy_unc"] is not None:
         assert got.energy.symmetric == pytest.approx(want["energy_unc"], rel=1e-6)
     assert got.spin_parity.raw == want["jpi_raw"]
-    assert sorted([c.two_j, c.parity] for c in got.spin_parity.candidates) == want["jpi"]
+    assert (
+        sorted([c.two_j, c.parity] for c in got.spin_parity.candidates) == want["jpi"]
+    )
     assert sorted(got.xref) == want["xref"]
     assert bool(got.metastable) == want["metastable"]
 
@@ -189,8 +190,12 @@ def test_moments_unchanged(adopted):
 
 def test_gamma_placement_unchanged(adopted):
     got = [
-        {"energy": g.energy_kev, "start": g.start_index, "end": g.end_index,
-         "mult": g.multipolarity}
+        {
+            "energy": g.energy_kev,
+            "start": g.start_index,
+            "end": g.end_index,
+            "mult": g.multipolarity,
+        }
         for g in adopted.gammas
     ]
     assert got == CHARACTERIZATION["gammas"]
@@ -214,8 +219,12 @@ def test_decay_scheme_unchanged(decay):
         want["normalization"]["NR"]
     )
     got = [
-        {"kind": f.kind, "level": f.level_index, "intensity": f.intensity.value,
-         "log_ft": f.log_ft.value if f.log_ft else None}
+        {
+            "kind": f.kind,
+            "level": f.level_index,
+            "intensity": f.intensity.value,
+            "log_ft": f.log_ft.value if f.log_ft else None,
+        }
         for f in decay.feedings
     ]
     assert got == want["feedings"]

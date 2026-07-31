@@ -69,8 +69,9 @@ def test_gdr_refuses_empty():
 
 
 def test_gdr_refuses_theor_only():
-    theor = GDREntry(nuclide=NUC, kind="theor",
-                     peaks=((Uncertain(16.0), Uncertain(5.0), None),))
+    theor = GDREntry(
+        nuclide=NUC, kind="theor", peaks=((Uncertain(16.0), Uncertain(5.0), None),)
+    )
     with pytest.raises(ValueError, match="cross-sections"):
         plot_gdr([theor])
 
@@ -134,7 +135,8 @@ def test_chart_panels_share_one_scale_and_bar():
     panel_a = [_state(12, 24, s_n=16531.0), _state(12, 25, s_n=7331.0)]
     panel_b = [_state(12, 24, s_n=16400.0), _state(12, 26, s_n=11093.0)]
     fig, axes = plot_chart_panels(
-        [("ensdf", panel_a), ("ripl3", panel_b)], colour_by="s_n",
+        [("ensdf", panel_a), ("ripl3", panel_b)],
+        colour_by="s_n",
     )
     assert len(axes) == 2
     clims = [ax.collections[0].get_clim() for ax in axes]
@@ -147,14 +149,16 @@ def test_chart_panels_share_one_scale_and_bar():
 def test_plot_chart_colorbar_can_be_skipped():
     from nook.plotting import plot_chart
 
-    fig, ax = plot_chart([_state(12, 24, s_n=16531.0)], colour_by="s_n",
-                         log=False, colorbar=False)
+    fig, ax = plot_chart(
+        [_state(12, 24, s_n=16531.0)], colour_by="s_n", log=False, colorbar=False
+    )
     assert len(fig.axes) == 1
 
 
 def test_level_comparison_refuses_empty():
-    empty = LevelComparison(nuclide=NUC, source_a="a", source_b="b",
-                            matched=(), only_a=(), only_b=())
+    empty = LevelComparison(
+        nuclide=NUC, source_a="a", source_b="b", matched=(), only_a=(), only_b=()
+    )
     with pytest.raises(ValueError, match="no levels to compare"):
         plot_level_comparison(empty)
 
@@ -181,15 +185,21 @@ def _synthetic_comparison():
     a3 = _level(3, 4122.9, "4+")
     b4 = _level(3, 5100.0, "3-")
     return LevelComparison(
-        nuclide=nook.Nuclide(12, 24), source_a="ensdf", source_b="ripl3-local",
+        nuclide=nook.Nuclide(12, 24),
+        source_a="ensdf",
+        source_b="ripl3-local",
         matched=(
-            LevelMatch(a=a1, b=b1, delta_kev=0.0, combined_sigma_kev=None,
-                       jpi_agree=True),
-            LevelMatch(a=a2, b=b2, delta_kev=0.1, combined_sigma_kev=0.2,
-                       jpi_agree=True),
+            LevelMatch(
+                a=a1, b=b1, delta_kev=0.0, combined_sigma_kev=None, jpi_agree=True
+            ),
+            LevelMatch(
+                a=a2, b=b2, delta_kev=0.1, combined_sigma_kev=0.2, jpi_agree=True
+            ),
         ),
-        only_a=(a3,), only_b=(b4,),
-        cutoff_a=3, cutoff_b=2,
+        only_a=(a3,),
+        only_b=(b4,),
+        cutoff_a=3,
+        cutoff_b=2,
     )
 
 
@@ -198,14 +208,13 @@ def test_level_comparison_draws_matches_and_ticks():
     fig, ax = plot_level_comparison(comparison)
     # two connectors, one per matched pair, crossing the gutter
     connectors = [
-        line for line in ax.lines
-        if len(line.get_xdata()) == 2
-        and list(line.get_xdata()) == [0.42, 0.58]
+        line
+        for line in ax.lines
+        if len(line.get_xdata()) == 2 and list(line.get_xdata()) == [0.42, 0.58]
     ]
     assert len(connectors) == comparison.n_matched
     # outward ticks for the one-sided levels, in the isomer hue
-    ticks = [line for line in ax.lines
-             if line.get_color() == PALETTE.isomer]
+    ticks = [line for line in ax.lines if line.get_color() == PALETTE.isomer]
     assert len(ticks) == len(comparison.only_a) + len(comparison.only_b)
     # both cutoff hairlines present
     dashed = [line for line in ax.lines if line.get_linestyle() == "--"]
@@ -218,9 +227,8 @@ def test_level_comparison_greys_assumed_spins():
     assert labels["$2^{+}$"] == PALETTE.unknown or (
         # both sides carry a 2+ label; the RIPL one (assumed) must be grey,
         # so grey must appear among the 2+ labels
-        PALETTE.unknown in [
-            t.get_color() for t in ax.texts if t.get_text() == "$2^{+}$"
-        ]
+        PALETTE.unknown
+        in [t.get_color() for t in ax.texts if t.get_text() == "$2^{+}$"]
     )
     fig.canvas.draw()
     assert _overlapping_labels(fig, ax) == []
@@ -261,7 +269,8 @@ def test_gsf_56fe_layout(source):
 def test_level_density_57fe_layout(source):
     scheme = source.fetch("57Fe")
     fig, (ax_rho, ax_cum) = plot_level_density(
-        source.hfb_density("57Fe"), scheme=scheme,
+        source.hfb_density("57Fe"),
+        scheme=scheme,
         ct=source.levels_param()[(26, 57)],
     )
     assert ax_rho.get_yscale() == "log" and ax_cum.get_yscale() == "log"
@@ -270,10 +279,12 @@ def test_level_density_57fe_layout(source):
     assert PALETTE.positive in colours and PALETTE.negative in colours
     # the Nmax hairline spans both panels
     for panel in (ax_rho, ax_cum):
-        assert any(line.get_linestyle() == "--" and len(line.get_xdata()) == 2
-                   and line.get_xdata()[0] == line.get_xdata()[1]
-                   for line in panel.lines) or any(
-            line.get_linestyle() == "--" for line in panel.lines)
+        assert any(
+            line.get_linestyle() == "--"
+            and len(line.get_xdata()) == 2
+            and line.get_xdata()[0] == line.get_xdata()[1]
+            for line in panel.lines
+        ) or any(line.get_linestyle() == "--" for line in panel.lines)
     # the staircase covers the drawable levels
     steps = [line for line in ax_cum.lines if line.get_drawstyle() != "default"]
     assert steps and len(steps[0].get_xdata()) > 50
@@ -326,8 +337,9 @@ def test_mass_residual_chart(source):
         collection = ax.collections[0]
         assert len(collection.get_paths()) > 1000
         # stable (abundance-bearing) nuclides keep the dark outline convention
-        outlined = [c for c in ax.collections if c is not collection
-                    and len(c.get_paths())]
+        outlined = [
+            c for c in ax.collections if c is not collection and len(c.get_paths())
+        ]
         assert outlined
 
 
@@ -359,9 +371,7 @@ def test_resonance_charts(source):
 def test_level_comparison_real_ripl_vs_itself(source):
     # "file" needs ENSDF, so exercise the real-data path RIPL-vs-RIPL: the
     # comparison machinery is source-agnostic and the layout is what matters
-    comparison = nook.compare.levels(
-        "24Mg", sources=("ripl3", "ripl3"), below=10000.0
-    )
+    comparison = nook.compare.levels("24Mg", sources=("ripl3", "ripl3"), below=10000.0)
     fig, ax = plot_level_comparison(comparison)
     assert comparison.n_matched > 3
     fig.canvas.draw()

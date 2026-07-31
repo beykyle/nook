@@ -8,6 +8,7 @@ python demos/make_figures.py ~/ensdf            # everything
 
 Every function returns matplotlib's `(figure, axes)`, so nothing is a dead end
 — keep adjusting before you save. PDF output is vector, for LaTeX `\includegraphics`.
+Full signatures live in the {mod}`nook.plotting` API reference.
 
 The [RIPL-3 figures](#gdr-lorentzians) draw from the committed mirror, so they
 regenerate with no external data; the ENSDF figures need a local distribution

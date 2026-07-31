@@ -59,40 +59,99 @@ ITEMS: list[tuple[str, str, str, str]] = [
     ("masses", "masses/density-d1s.readme", "file", "masses/density-d1s.readme"),
     # levels: the 2021 cut only
     ("levels", "levels/levels_2021.zip", "zip", "levels/"),
-    ("levels", "levels/levels-param-2021.data", "file", "levels/levels-param-2021.data"),
-    ("levels", "levels/levels-param-2021.readme", "file",
-     "levels/levels-param-2021.readme"),
-    ("levels", "levels/levels-readme-2020.html", "file", "levels/levels-readme-2020.html"),
-    ("levels", "levels/levels-readme-2015.html", "file", "levels/levels-readme-2015.html"),
+    (
+        "levels",
+        "levels/levels-param-2021.data",
+        "file",
+        "levels/levels-param-2021.data",
+    ),
+    (
+        "levels",
+        "levels/levels-param-2021.readme",
+        "file",
+        "levels/levels-param-2021.readme",
+    ),
+    (
+        "levels",
+        "levels/levels-readme-2020.html",
+        "file",
+        "levels/levels-readme-2020.html",
+    ),
+    (
+        "levels",
+        "levels/levels-readme-2015.html",
+        "file",
+        "levels/levels-readme-2015.html",
+    ),
     # resonances: average resonance parameters
     ("resonances", "resonances/resonances0.dat", "file", "resonances/resonances0.dat"),
     ("resonances", "resonances/resonances1.dat", "file", "resonances/resonances1.dat"),
-    ("resonances", "resonances/resonances.readme", "file", "resonances/resonances.readme"),
+    (
+        "resonances",
+        "resonances/resonances.readme",
+        "file",
+        "resonances/resonances.readme",
+    ),
     # optical: the OMP archive and its indexes
     ("optical", "optical/om-parameter-u.dat", "file", "optical/om-parameter-u.dat"),
-    ("optical", "optical/om-parameter-u.readme", "file", "optical/om-parameter-u.readme"),
+    (
+        "optical",
+        "optical/om-parameter-u.readme",
+        "file",
+        "optical/om-parameter-u.readme",
+    ),
     ("optical", "optical/om-deformations.dat", "file", "optical/om-deformations.dat"),
-    ("optical", "optical/om-deformations.readme", "file",
-     "optical/om-deformations.readme"),
+    (
+        "optical",
+        "optical/om-deformations.readme",
+        "file",
+        "optical/om-deformations.readme",
+    ),
     ("optical", "optical/optical.readme", "file", "optical/optical.readme"),
-    ("optical", "optical/omp-index-ordered-by-Z.txt", "file",
-     "optical/omp-index-ordered-by-Z.txt"),
-    ("optical", "optical/omp-index-RIPL-ID.txt", "file", "optical/omp-index-RIPL-ID.txt"),
-    ("optical", "optical/references-RIPL-ID.txt", "file", "optical/references-RIPL-ID.txt"),
+    (
+        "optical",
+        "optical/omp-index-ordered-by-Z.txt",
+        "file",
+        "optical/omp-index-ordered-by-Z.txt",
+    ),
+    (
+        "optical",
+        "optical/omp-index-RIPL-ID.txt",
+        "file",
+        "optical/omp-index-RIPL-ID.txt",
+    ),
+    (
+        "optical",
+        "optical/references-RIPL-ID.txt",
+        "file",
+        "optical/references-RIPL-ID.txt",
+    ),
     # densities: analytic parameters + HFB tables (total and partial)
     ("densities", "densities/densities.tgz", "tgz", "densities/"),
     # gamma: GDR parameters, strength functions (exp, analytic, microscopic)
     ("gamma", "gamma/gamma.tgz", "tgz", "gamma/"),
-    ("gamma", "gamma/gamma-strength-micro.readme", "file",
-     "gamma/gamma-strength-micro.readme"),
+    (
+        "gamma",
+        "gamma/gamma-strength-micro.readme",
+        "file",
+        "gamma/gamma-strength-micro.readme",
+    ),
     # fission: empirical + HFB barriers, HFB level densities at saddle points
     ("fission", "fission/fission.tgz", "tgz", "fission/"),
     ("fission", "fission/hfb-barriers.tgz", "tgz", "fission/"),
     ("fission", "fission/hfb-levden.tgz", "tgz", "fission/"),
-    ("fission", "fission/empirical-barriers.readme", "file",
-     "fission/empirical-barriers.readme"),
-    ("fission", "fission/empirical-hfb-barriers.readme", "file",
-     "fission/empirical-hfb-barriers.readme"),
+    (
+        "fission",
+        "fission/empirical-barriers.readme",
+        "file",
+        "fission/empirical-barriers.readme",
+    ),
+    (
+        "fission",
+        "fission/empirical-hfb-barriers.readme",
+        "file",
+        "fission/empirical-hfb-barriers.readme",
+    ),
     ("fission", "fission/hfb-levden.readme", "file", "fission/hfb-levden.readme"),
 ]
 
@@ -165,7 +224,9 @@ def extract(archive: Path, dest: Path) -> None:
                 else:  # pragma: no cover - 3.10/3.11
                     for member in tf.getmembers():
                         if member.name.startswith(("/", "..")) or ".." in member.name:
-                            raise RuntimeError(f"unsafe path in {archive}: {member.name}")
+                            raise RuntimeError(
+                                f"unsafe path in {archive}: {member.name}"
+                            )
                     tf.extractall(tmp_path)
         entries = list(tmp_path.iterdir())
         root = entries[0] if len(entries) == 1 and entries[0].is_dir() else tmp_path
@@ -243,7 +304,11 @@ def record_manifest(dest: Path) -> dict:
             continue
         stat = path.stat()
         known = previous.get(rel)
-        if known and known["size"] == stat.st_size and known.get("mtime_ns") == stat.st_mtime_ns:
+        if (
+            known
+            and known["size"] == stat.st_size
+            and known.get("mtime_ns") == stat.st_mtime_ns
+        ):
             sha256 = known["sha256"]
         else:
             sha256 = sha256_of(path)
@@ -276,23 +341,36 @@ def main(argv: list[str] | None = None) -> int:
         description="Mirror the RIPL-3 data segments into data/ripl3/."
     )
     parser.add_argument(
-        "--dest", type=Path, default=default_dest(),
+        "--dest",
+        type=Path,
+        default=default_dest(),
         help="mirror directory (default: $RIPL_PATH, else <repo>/data/ripl3)",
     )
     parser.add_argument("--only", choices=SEGMENTS, help="restrict to one segment")
-    parser.add_argument("--record", action="store_true",
-                        help="download, extract, and (re)write the manifest")
-    parser.add_argument("--verify", action="store_true",
-                        help="offline: check every manifest entry's size and sha256")
-    parser.add_argument("--refresh", choices=SEGMENTS,
-                        help="re-download one segment, then rewrite the manifest")
+    parser.add_argument(
+        "--record",
+        action="store_true",
+        help="download, extract, and (re)write the manifest",
+    )
+    parser.add_argument(
+        "--verify",
+        action="store_true",
+        help="offline: check every manifest entry's size and sha256",
+    )
+    parser.add_argument(
+        "--refresh",
+        choices=SEGMENTS,
+        help="re-download one segment, then rewrite the manifest",
+    )
     args = parser.parse_args(argv)
 
     if args.verify:
         return verify(args.dest)
 
-    segments = {args.refresh} if args.refresh else (
-        {args.only} if args.only else set(SEGMENTS)
+    segments = (
+        {args.refresh}
+        if args.refresh
+        else ({args.only} if args.only else set(SEGMENTS))
     )
     if not (args.record or args.refresh):
         parser.error("choose one of --record, --verify, --refresh")

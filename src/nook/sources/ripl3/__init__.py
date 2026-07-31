@@ -20,6 +20,14 @@ from ...groundstate import GroundState
 from ...model import LevelScheme
 from ...nuclide import Nuclide
 from ._util import clear_ripl_cache, parse_file, require_file
+from .densities import (
+    DensityTable,
+    LevelDensityParams,
+    load_hfb_density,
+    load_level_density_params,
+)
+from .fission import BarrierEntry, FissionBarriers, load_fission_barriers
+from .gamma import GDREntry, GSFTable, load_gdr, load_gsf
 from .levels import (
     LevelsParam,
     RiplNuclideLevels,
@@ -34,21 +42,13 @@ from .masses import (
     load_mass_table,
     load_matter_density,
 )
-from .resonances import ResonanceEntry, load_resonances, parse_resonances
-from .gamma import GDREntry, GSFTable, load_gdr, load_gsf
-from .fission import BarrierEntry, FissionBarriers, load_fission_barriers
 from .optical import (
     Deformation,
     OpticalPotential,
     load_deformations,
     load_optical_potentials,
 )
-from .densities import (
-    DensityTable,
-    LevelDensityParams,
-    load_hfb_density,
-    load_level_density_params,
-)
+from .resonances import ResonanceEntry, load_resonances, parse_resonances
 
 __all__ = [
     "RIPL3_EVALUATIONS",
@@ -78,7 +78,7 @@ __all__ = [
 #: per-value citations.
 RIPL3_EVALUATIONS = {
     "levels": "RIPL-3 discrete levels (2021 cut; derived from ENSDF, "
-              "NUBASE2020 ground states, AME2020 separation energies)",
+    "NUBASE2020 ground states, AME2020 separation energies)",
     "levels_param": "RIPL-3 constant-temperature fit of discrete level schemes",
     "mass_excess_exp": "Audi mass evaluation as shipped with RIPL-3",
     "mass_excess_frdm95": "FRDM (Moller, Nix, Myers, Swiatecki 1995)",

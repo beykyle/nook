@@ -19,9 +19,8 @@ from pathlib import Path
 
 from ...nuclide import Nuclide
 from ...quantities import Uncertain
-from ._util import data_lines
+from ._util import data_lines, parse_file, require_file
 from ._util import is_number as _is_number
-from ._util import parse_file, require_file
 
 __all__ = ["BarrierEntry", "FissionBarriers", "load_fission_barriers"]
 
@@ -45,7 +44,7 @@ class FissionBarriers:
     """Every barrier RIPL-3 carries for one nuclide, one model family."""
 
     nuclide: Nuclide
-    model: str                       # "empirical" or "hfb"
+    model: str  # "empirical" or "hfb"
     barriers: tuple[BarrierEntry, ...]
     #: Pairing gap at the saddle (empirical Deltaf), MeV.
     pairing_gap_mev: float | None = None
@@ -78,7 +77,9 @@ def _parse_empirical(text: str) -> dict[tuple[int, int], FissionBarriers]:
                 pairing = numbers[2]
             height = Uncertain(numbers[0]) if numbers else Uncertain(None)
             hw = Uncertain(numbers[1]) if len(numbers) > 1 else Uncertain(None)
-            barriers.append(BarrierEntry(height_mev=height, hw_mev=hw, symmetry=symmetry))
+            barriers.append(
+                BarrierEntry(height_mev=height, hw_mev=hw, symmetry=symmetry)
+            )
             numbers, symmetry = [], None
 
         for token in tokens[3:]:
@@ -89,8 +90,10 @@ def _parse_empirical(text: str) -> dict[tuple[int, int], FissionBarriers]:
                 symmetry = token
         close_group()
         table[(z, a)] = FissionBarriers(
-            nuclide=Nuclide(z, a), model="empirical",
-            barriers=tuple(barriers), pairing_gap_mev=pairing,
+            nuclide=Nuclide(z, a),
+            model="empirical",
+            barriers=tuple(barriers),
+            pairing_gap_mev=pairing,
         )
     return table
 
@@ -112,7 +115,9 @@ def _parse_hfb(text: str) -> dict[tuple[int, int], FissionBarriers]:
             for i in range(0, len(values) - len(values) % 4, 4)
         )
         table[(z, a)] = FissionBarriers(
-            nuclide=Nuclide(z, a), model="hfb", barriers=barriers,
+            nuclide=Nuclide(z, a),
+            model="hfb",
+            barriers=barriers,
         )
     return table
 

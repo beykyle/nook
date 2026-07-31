@@ -43,18 +43,22 @@ def _levels_parser(sub) -> None:
     p = sub.add_parser("levels", help="print a level scheme")
     p.add_argument("nuclide", help='e.g. "24Mg", "Mg-24"')
     p.add_argument(
-        "--source", choices=("livechart", "file", "ripl3"), default="livechart",
+        "--source",
+        choices=("livechart", "file", "ripl3"),
+        default="livechart",
         help="IAEA API (adopted levels), local NNDC flat files, or the RIPL-3 mirror",
     )
     p.add_argument("--dataset", help="DSID substring; only with --source file")
     p.add_argument("--path", help="directory holding the source's data files")
     p.add_argument("--below", type=float, metavar="KEV", help="energy cutoff")
     p.add_argument(
-        "--complete", action="store_true",
+        "--complete",
+        action="store_true",
         help="truncate at the first level without a firm E, J and parity",
     )
     p.add_argument(
-        "--nmax", action="store_true",
+        "--nmax",
+        action="store_true",
         help="truncate at RIPL's completeness cutoff; only with --source ripl3",
     )
     p.add_argument("--json", action="store_true", help="emit records as JSON")
@@ -97,8 +101,13 @@ def _run_levels(args) -> int:
 def _print_masses(entry) -> None:
     print(f"# {entry.nuclide}  RIPL-3 masses  [ripl3-local]")
     for name in (
-        "mass_excess_exp", "mass_excess_frdm95", "mass_excess_hfb14",
-        "emic_frdm95", "beta2_frdm95", "beta2_hfb14", "abundance",
+        "mass_excess_exp",
+        "mass_excess_frdm95",
+        "mass_excess_hfb14",
+        "emic_frdm95",
+        "beta2_frdm95",
+        "beta2_hfb14",
+        "abundance",
     ):
         value = getattr(entry, name)
         if value is None:
@@ -129,8 +138,9 @@ def _print_fission(entry) -> None:
     print(f"# {entry.nuclide}  fission barriers ({entry.model})  [ripl3-local]")
     for i, barrier in enumerate(entry.barriers):
         sym = f"  {barrier.symmetry}" if barrier.symmetry else ""
-        print(f"  barrier {i + 1}: {barrier.height_mev} MeV"
-              f"  hw {barrier.hw_mev} MeV{sym}")
+        print(
+            f"  barrier {i + 1}: {barrier.height_mev} MeV  hw {barrier.hw_mev} MeV{sym}"
+        )
 
 
 #: segment -> (help text, extra argparse options, fetch, plain-text printer).
@@ -202,15 +212,17 @@ def _compare_parser(sub) -> None:
     p.add_argument("nuclide")
     p.add_argument("--what", choices=("levels", "masses"), default="levels")
     p.add_argument(
-        "--sources", default="file,ripl3",
+        "--sources",
+        default="file,ripl3",
         help="two comma-separated level sources (default file,ripl3)",
     )
     p.add_argument("--below", type=float, metavar="KEV")
     p.add_argument("--tolerance", type=float, default=2.0, metavar="KEV")
     p.add_argument("--path", help="ENSDF flat-file directory")
     p.add_argument("--ripl-path", help="RIPL-3 mirror directory")
-    p.add_argument("--no-livechart", action="store_true",
-                   help="masses: skip the network entry")
+    p.add_argument(
+        "--no-livechart", action="store_true", help="masses: skip the network entry"
+    )
     p.add_argument("--json", action="store_true")
 
 
@@ -224,8 +236,11 @@ def _run_compare(args) -> int:
             if len(sources) != 2:
                 raise ValueError("--sources needs exactly two names")
             result = compare.levels(
-                args.nuclide, sources=sources, below=args.below,
-                tolerance_kev=args.tolerance, path=args.path,
+                args.nuclide,
+                sources=sources,
+                below=args.below,
+                tolerance_kev=args.tolerance,
+                path=args.path,
                 ripl_path=args.ripl_path,
             )
             if args.json:
@@ -234,11 +249,14 @@ def _run_compare(args) -> int:
                 print(result)
                 for m in result.matched:
                     if m.significant:
-                        print(f"  != {m.a.energy_kev:10.2f} vs {m.b.energy_kev:10.2f} keV"
-                              f"  ({m.a.spin_parity} / {m.b.spin_parity})")
+                        print(
+                            f"  != {m.a.energy_kev:10.2f} vs {m.b.energy_kev:10.2f} keV"
+                            f"  ({m.a.spin_parity} / {m.b.spin_parity})"
+                        )
         else:
             result = compare.masses(
-                args.nuclide, ripl_path=args.ripl_path,
+                args.nuclide,
+                ripl_path=args.ripl_path,
                 with_livechart=not args.no_livechart,
             )
             if args.json:
@@ -266,7 +284,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     # `nook 24Mg` == `nook levels 24Mg`
-    if argv and argv[0] not in _SUBCOMMANDS and argv[0] not in ("-h", "--help", "--version"):
+    if (
+        argv
+        and argv[0] not in _SUBCOMMANDS
+        and argv[0] not in ("-h", "--help", "--version")
+    ):
         argv.insert(0, "levels")
     args = build_parser().parse_args(argv)
     if args.command == "levels":

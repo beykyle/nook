@@ -30,7 +30,6 @@ from nook.plotting import (  # noqa: E402
 )
 from nook.plotting.style import dodge, half_life_label, jpi_label  # noqa: E402
 from nook.survey import NuclideSummary, decay_modes_from  # noqa: E402
-
 from test_nook import BAND_FIXTURE, DECAY_FIXTURE, ENSDF_FIXTURE  # noqa: E402
 
 
@@ -57,8 +56,8 @@ def close_figures():
     [
         ("0+", "$0^{+}$"),
         ("3/2-", "$3/2^{-}$"),
-        ("(2+)", "$(2^{+})$"),          # tentative keeps its parentheses
-        ("1-,2-", "$(1,2)^{-}$"),       # a shared parity is factored out
+        ("(2+)", "$(2^{+})$"),  # tentative keeps its parentheses
+        ("1-,2-", "$(1,2)^{-}$"),  # a shared parity is factored out
         ("", ""),
     ],
 )
@@ -119,8 +118,8 @@ def test_level_scheme_colours_by_parity(scheme):
 
     fig, ax = plot_level_scheme(scheme, show_gammas=False)
     colours = {line.get_color() for line in ax.lines}
-    assert PALETTE.positive in colours          # the 0+, 2+, 4+ levels
-    assert PALETTE.unknown in colours           # the 3/2..9/2 level has no parity
+    assert PALETTE.positive in colours  # the 0+, 2+, 4+ levels
+    assert PALETTE.unknown in colours  # the 3/2..9/2 level has no parity
 
 
 def test_level_scheme_refuses_an_empty_selection(scheme):
@@ -132,7 +131,7 @@ def test_band_scheme_draws_a_column_per_band():
     band_scheme = parse_ensdf_text(BAND_FIXTURE)[0].to_scheme()
     fig, ax = plot_band_scheme(band_scheme)
     captions = [t.get_text() for t in ax.texts]
-    assert any("1+" in c for c in captions)     # the decoded BAND() text
+    assert any("1+" in c for c in captions)  # the decoded BAND() text
     assert any("\u03c07/2[404]" in c for c in captions)  # its configuration
 
 
@@ -171,12 +170,24 @@ def test_decay_scheme_refuses_without_placed_feedings():
 def _states():
     return [
         NuclideSummary(nuclide=el.Nuclide(2, 4), stable=True),
-        NuclideSummary(nuclide=el.Nuclide(6, 14), decay_modes=("B-",),
-                    half_life_s=1.8e11, s_n=8176.0),
-        NuclideSummary(nuclide=el.Nuclide(11, 22), decay_modes=("EC", "B+"),
-                    half_life_s=8.2e7, s_n=11000.0),
-        NuclideSummary(nuclide=el.Nuclide(92, 238), decay_modes=("A", "SF"),
-                    half_life_s=1.4e17, s_n=6154.0),
+        NuclideSummary(
+            nuclide=el.Nuclide(6, 14),
+            decay_modes=("B-",),
+            half_life_s=1.8e11,
+            s_n=8176.0,
+        ),
+        NuclideSummary(
+            nuclide=el.Nuclide(11, 22),
+            decay_modes=("EC", "B+"),
+            half_life_s=8.2e7,
+            s_n=11000.0,
+        ),
+        NuclideSummary(
+            nuclide=el.Nuclide(92, 238),
+            decay_modes=("A", "SF"),
+            half_life_s=1.4e17,
+            s_n=6154.0,
+        ),
     ]
 
 
@@ -201,8 +212,11 @@ def test_chart_uses_physics_notation_on_the_colourbar():
 
 def test_chart_marks_stable_nuclides_when_colouring_continuously():
     fig, ax = plot_chart(_states(), colour_by="s_n", log=False)
-    outlined = [c for c in ax.collections if c.get_edgecolor().size and
-                not c.get_facecolor().size]
+    outlined = [
+        c
+        for c in ax.collections
+        if c.get_edgecolor().size and not c.get_facecolor().size
+    ]
     assert outlined, "stable nuclides should stay outlined under any ramp"
 
 
@@ -219,8 +233,8 @@ def test_chart_refuses_an_empty_survey():
 @pytest.mark.parametrize(
     "key,expected",
     [
-        ("%EC+%B+", ("EC", "B+")),   # one key naming two modes
-        ("%B-N", ("B-",)),           # delayed emission: primary mode is beta
+        ("%EC+%B+", ("EC", "B+")),  # one key naming two modes
+        ("%B-N", ("B-",)),  # delayed emission: primary mode is beta
         ("%ECP", ("EC",)),
         ("%A", ("A",)),
         ("%IT", ("IT",)),
@@ -248,13 +262,13 @@ from nook.survey import inconsistencies  # noqa: E402
 def test_stable_nuclide_cannot_have_a_negative_separation_energy():
     """The 112Sn record in one ENSDF snapshot has S(n) = -10788 keV."""
     state = NuclideSummary(nuclide=el.Nuclide(50, 112), stable=True, s_n=-10788.0)
-    (_, reason), = inconsistencies([state])
+    ((_, reason),) = inconsistencies([state])
     assert "stable but S(n)" in reason
 
 
 def test_unbound_nuclide_cannot_have_a_measurable_half_life():
     state = NuclideSummary(nuclide=el.Nuclide(43, 112), s_n=-4304.0, half_life_s=0.271)
-    (_, reason), = inconsistencies([state])
+    ((_, reason),) = inconsistencies([state])
     assert "promptly" in reason
 
 
@@ -266,16 +280,18 @@ def test_genuinely_unbound_light_nuclei_are_not_flagged():
 def test_extrapolated_values_are_marked_as_such():
     """An SY value straddling zero is unreliable, not wrong."""
     state = NuclideSummary(
-        nuclide=el.Nuclide(7, 24), s_n=-500.0, half_life_s=5.2e-8,
+        nuclide=el.Nuclide(7, 24),
+        s_n=-500.0,
+        half_life_s=5.2e-8,
         estimated=("s_n",),
     )
-    (_, reason), = inconsistencies([state])
+    ((_, reason),) = inconsistencies([state])
     assert "from systematics" in reason
 
 
 def test_out_of_range_energies_are_flagged():
     state = NuclideSummary(nuclide=el.Nuclide(44, 117), q_alpha=-91800.0)
-    (_, reason), = inconsistencies([state])
+    ((_, reason),) = inconsistencies([state])
     assert "out of range" in reason
 
 
@@ -327,9 +343,14 @@ def _from_mass_excesses(excess: dict[tuple[int, int], float], **overrides):
 
 
 _GRID = {
-    (50, 111): -85940.0, (50, 112): -88660.0, (50, 113): -88330.0,
-    (51, 111): -82000.0, (51, 112): -81600.0, (51, 113): -84420.0,
-    (52, 112): -77570.0, (52, 113): -75880.0,
+    (50, 111): -85940.0,
+    (50, 112): -88660.0,
+    (50, 113): -88330.0,
+    (51, 111): -82000.0,
+    (51, 112): -81600.0,
+    (51, 113): -84420.0,
+    (52, 112): -77570.0,
+    (52, 113): -75880.0,
 }
 
 
@@ -355,8 +376,9 @@ def test_extrapolated_values_are_not_expected_to_close():
     """SY values are extrapolations; holding them to the mass surface is unfair."""
     states = _from_mass_excesses(_GRID)
     marked = [
-        NuclideSummary(**{**s.__dict__, "s_n": -abs(s.s_n or 1.0),
-                          "estimated": ("s_n",)})
+        NuclideSummary(
+            **{**s.__dict__, "s_n": -abs(s.s_n or 1.0), "estimated": ("s_n",)}
+        )
         if s.nuclide == el.Nuclide(50, 112)
         else s
         for s in states
@@ -375,12 +397,12 @@ def test_closure_tolerance_scales_with_the_quoted_uncertainty():
         else s
         for s in loose
     ]
-    assert closure_failures(nudged) == []          # 900 keV is under 5 sigma here
+    assert closure_failures(nudged) == []  # 900 keV is under 5 sigma here
     tight = [
         NuclideSummary(**{**s.__dict__, "s_n_unc": 1.0, "q_beta_minus_unc": 1.0})
         for s in nudged
     ]
-    assert closure_failures(tight)                 # the same shift, now 450 sigma
+    assert closure_failures(tight)  # the same shift, now 450 sigma
 
 
 def test_closure_failures_reach_the_inconsistency_report():
@@ -469,7 +491,9 @@ def test_an_unconstrained_value_is_never_touched():
     ]
     fixed, changes = repair(broken)
     assert changes == []
-    assert next(s for s in fixed if s.nuclide == el.Nuclide(50, 112)).q_alpha == -91800.0
+    assert (
+        next(s for s in fixed if s.nuclide == el.Nuclide(50, 112)).q_alpha == -91800.0
+    )
 
 
 def test_extrapolated_values_are_never_repaired():
@@ -495,8 +519,13 @@ def test_only_the_declared_transforms_are_ever_applied():
     ]
     assert repair(broken)[1] == []
     assert {name for name, _ in TRANSFORMS} == {
-        "negate", "scale x10", "scale x100", "scale x1000", "scale x10000",
-        "scale /10", "scale /100",
+        "negate",
+        "scale x10",
+        "scale x100",
+        "scale x1000",
+        "scale x10000",
+        "scale /10",
+        "scale /100",
     }
 
 
@@ -510,12 +539,13 @@ def _overlapping_labels(fig, ax):
     renderer = fig.canvas.get_renderer()
     boxes = [
         (t.get_text(), t.get_window_extent(renderer))
-        for t in ax.texts if t.get_text().strip()
+        for t in ax.texts
+        if t.get_text().strip()
     ]
     return [
         (a, b)
         for i, (a, box_a) in enumerate(boxes)
-        for b, box_b in boxes[i + 1:]
+        for b, box_b in boxes[i + 1 :]
         if box_a.overlaps(box_b)
     ]
 
@@ -594,9 +624,12 @@ def test_only_extremal_feedings_are_annotated():
         parents=parse_ensdf_text(DECAY_FIXTURE)[0].parents,
         normalization=parse_ensdf_text(DECAY_FIXTURE)[0].normalization,
         feedings=tuple(
-            Feeding(kind="B", level_index=i % 2,
-                    intensity=el.Uncertain(10.0 + i, 1.0, 1.0),
-                    log_ft=el.Uncertain(5.0 + 0.4 * i, 0.1, 0.1))
+            Feeding(
+                kind="B",
+                level_index=i % 2,
+                intensity=el.Uncertain(10.0 + i, 1.0, 1.0),
+                log_ft=el.Uncertain(5.0 + 0.4 * i, 0.1, 0.1),
+            )
             for i in range(8)
         ),
     )
@@ -640,8 +673,10 @@ def _bare_labels_over_strokes(fig, ax):
         box = text.get_window_extent(renderer)
         crossed = any(
             (
-                (points[:, 0] >= box.x0) & (points[:, 0] <= box.x1)
-                & (points[:, 1] >= box.y0) & (points[:, 1] <= box.y1)
+                (points[:, 0] >= box.x0)
+                & (points[:, 0] <= box.x1)
+                & (points[:, 1] >= box.y0)
+                & (points[:, 1] <= box.y1)
             ).any()
             for points in strokes
         )
@@ -705,8 +740,9 @@ def test_every_decay_scheme_in_several_chains_draws_cleanly():
 
     clashing, drawn = [], 0
     for chain in sorted(CHAIN_DIR.glob("ensdf.1[0-2][0-9]")):
-        for nuclide in sorted({d.nuclide for d in _parse_chain(chain)},
-                              key=lambda n: n.z):
+        for nuclide in sorted(
+            {d.nuclide for d in _parse_chain(chain)}, key=lambda n: n.z
+        ):
             for scheme in el.decay_schemes(nuclide, path=CHAIN_DIR):
                 try:
                     fig, ax = plot_decay_scheme(scheme)

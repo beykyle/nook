@@ -16,6 +16,19 @@ pandas = ["pandas>=1.5"]
 uncertainties = ["uncertainties>=3.1"]
 plot = ["matplotlib>=3.6"]
 dev = ["pytest>=7", "pandas>=1.5", "uncertainties>=3.1", "matplotlib>=3.6"]
+docs = [
+    "sphinx>=7",
+    "furo",
+    "myst-parser>=2",
+    # autodoc imports nook.plotting, which imports matplotlib eagerly
+    "matplotlib>=3.6",
+    "pandas>=1.5",
+    "uncertainties>=3.1",
+]
+
+[project.urls]
+Documentation = "https://beykyle.github.io/nook/"
+Repository = "https://github.com/beykyle/nook"
 
 [project.scripts]
 nook = "nook.cli:main"
@@ -26,6 +39,15 @@ packages = ["src/nook"]
 [tool.hatch.build.targets.sdist]
 # the RIPL-3 mirror is repo data, not package data
 exclude = ["data"]
+
+[tool.ruff]
+line-length = 88
+src = ["src", "tests", "tools", "demos"]
+# code blocks in the docs use aligned trailing comments; leave them be
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -61,4 +83,3 @@ reportOptionalOperand = "none"
 reportArgumentType = "none"
 reportAttributeAccessIssue = "none"
 reportIndexIssue = "none"
-

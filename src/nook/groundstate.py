@@ -123,10 +123,18 @@ class GroundState:
         return UNITS.get(quantity)
 
     def __str__(self) -> str:
-        rows = [f"{self.nuclide} ground state  {self.spin_parity}  T1/2 = {self.half_life}"]
+        rows = [
+            f"{self.nuclide} ground state  {self.spin_parity}  T1/2 = {self.half_life}"
+        ]
         for name in (
-            "mass_excess", "binding_per_nucleon", "s_n", "s_p",
-            "abundance", "charge_radius", "magnetic_dipole", "electric_quadrupole",
+            "mass_excess",
+            "binding_per_nucleon",
+            "s_n",
+            "s_p",
+            "abundance",
+            "charge_radius",
+            "magnetic_dipole",
+            "electric_quadrupole",
         ):
             value = getattr(self, name)
             if value.value is not None:

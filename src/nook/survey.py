@@ -58,8 +58,11 @@ def decay_modes_from(properties) -> tuple[str, ...]:
             if part not in DECAY_ORDER:
                 # delayed emission: the primary mode is the leading beta or EC
                 part = next(
-                    (p for p in ("B-", "B+", "EC")
-                     if part.startswith(p) and len(part) > len(p)),
+                    (
+                        p
+                        for p in ("B-", "B+", "EC")
+                        if part.startswith(p) and len(part) > len(p)
+                    ),
                     None,
                 )
                 if part is None:
@@ -116,13 +119,20 @@ class NuclideSummary:
 
     def as_dict(self) -> dict:
         return {
-            "z": self.nuclide.z, "a": self.nuclide.a, "jpi": self.jpi,
-            "two_j": self.two_j, "parity": self.parity,
-            "half_life_s": self.half_life_s, "stable": self.stable,
+            "z": self.nuclide.z,
+            "a": self.nuclide.a,
+            "jpi": self.jpi,
+            "two_j": self.two_j,
+            "parity": self.parity,
+            "half_life_s": self.half_life_s,
+            "stable": self.stable,
             "decay_modes": list(self.decay_modes),
-            "s_n": self.s_n, "s_p": self.s_p,
-            "q_beta_minus": self.q_beta_minus, "q_alpha": self.q_alpha,
-            "s_n_unc": self.s_n_unc, "q_beta_minus_unc": self.q_beta_minus_unc,
+            "s_n": self.s_n,
+            "s_p": self.s_p,
+            "q_beta_minus": self.q_beta_minus,
+            "q_alpha": self.q_alpha,
+            "s_n_unc": self.s_n_unc,
+            "q_beta_minus_unc": self.q_beta_minus_unc,
             "estimated": list(self.estimated),
             "repaired": list(self.repaired),
         }
@@ -131,11 +141,16 @@ class NuclideSummary:
     def from_dict(cls, row: dict) -> "NuclideSummary":
         return cls(
             nuclide=Nuclide(row["z"], row["a"]),
-            jpi=row["jpi"], two_j=row["two_j"], parity=row["parity"],
-            half_life_s=row["half_life_s"], stable=row["stable"],
+            jpi=row["jpi"],
+            two_j=row["two_j"],
+            parity=row["parity"],
+            half_life_s=row["half_life_s"],
+            stable=row["stable"],
             decay_modes=tuple(row["decay_modes"]),
-            s_n=row["s_n"], s_p=row["s_p"],
-            q_beta_minus=row["q_beta_minus"], q_alpha=row["q_alpha"],
+            s_n=row["s_n"],
+            s_p=row["s_p"],
+            q_beta_minus=row["q_beta_minus"],
+            q_alpha=row["q_alpha"],
             s_n_unc=row.get("s_n_unc"),
             q_beta_minus_unc=row.get("q_beta_minus_unc"),
             estimated=tuple(row.get("estimated", ())),
@@ -148,7 +163,8 @@ def _adopted_ground_states(path: Path) -> Iterator[NuclideSummary]:
         if not dataset.is_adopted or not dataset.levels:
             continue
         placed = [
-            lv for lv in dataset.levels
+            lv
+            for lv in dataset.levels
             if lv.energy_kev is not None and not lv.is_floating
         ]
         if not placed:
@@ -169,17 +185,25 @@ def _adopted_ground_states(path: Path) -> Iterator[NuclideSummary]:
             nuclide=dataset.nuclide,
             energy_kev=ground.energy_kev,
             jpi=ground.spin_parity.raw,
-            two_j=ground.spin_parity.unique.two_j if ground.spin_parity.unique else None,
-            parity=ground.spin_parity.unique.parity if ground.spin_parity.unique else None,
+            two_j=ground.spin_parity.unique.two_j
+            if ground.spin_parity.unique
+            else None,
+            parity=ground.spin_parity.unique.parity
+            if ground.spin_parity.unique
+            else None,
             half_life_s=None if seconds is None or math.isinf(seconds) else seconds,
             stable=ground.half_life.stable,
             decay_modes=tuple(name.upper() for name, _ in ground.decay_modes)
             or decay_modes_from(ground.properties),
-            s_n=q("s_n"), s_n_unc=dq("s_n"), s_p=q("s_p"),
-            q_beta_minus=q("q_beta_minus"), q_beta_minus_unc=dq("q_beta_minus"),
+            s_n=q("s_n"),
+            s_n_unc=dq("s_n"),
+            s_p=q("s_p"),
+            q_beta_minus=q("q_beta_minus"),
+            q_beta_minus_unc=dq("q_beta_minus"),
             q_alpha=q("q_alpha"),
             estimated=tuple(
-                name for name in ("s_n", "s_p", "q_beta_minus", "q_alpha")
+                name
+                for name in ("s_n", "s_p", "q_beta_minus", "q_alpha")
                 if str(getattr(q_record.get(name), "operator", "")) in ("SY", "CA")
             ),
         )
@@ -197,8 +221,10 @@ def survey(
     """
     root = Path(path) if path is not None else default_ensdf_path()
     cache_path = (
-        None if cache is False
-        else Path(cache) if cache is not None
+        None
+        if cache is False
+        else Path(cache)
+        if cache is not None
         else root / "ground-state-survey.json"
     )
     if cache_path is not None and cache_path.is_file():
@@ -244,6 +270,7 @@ def inconsistencies(
     Nothing is corrected. The caller decides whether to drop the record, plot
     it anyway, or go and read the file.
     """
+
     def note(state, name):
         return " (from systematics)" if name in state.estimated else ""
 
@@ -258,15 +285,15 @@ def inconsistencies(
                 (state, f"stable but S(p) = {state.s_p:g} keV" + note(state, "s_p"))
             )
         if state.stable and (state.q_beta_minus or 0) > 0:
-            flagged.append(
-                (state, f"stable but Q(beta-) = {state.q_beta_minus:g} keV")
-            )
+            flagged.append((state, f"stable but Q(beta-) = {state.q_beta_minus:g} keV"))
         if (state.s_n or 0) < 0 and (state.half_life_s or 0) > _PROMPT_LIMIT_S:
-            flagged.append((
-                state,
-                f"S(n) = {state.s_n:g} keV but T(1/2) = {state.half_life_s:g} s; "
-                "an unbound neutron is emitted promptly" + note(state, "s_n"),
-            ))
+            flagged.append(
+                (
+                    state,
+                    f"S(n) = {state.s_n:g} keV but T(1/2) = {state.half_life_s:g} s; "
+                    "an unbound neutron is emitted promptly" + note(state, "s_n"),
+                )
+            )
         for name in ("s_n", "s_p", "q_alpha", "q_beta_minus"):
             value = getattr(state, name)
             if value is not None and abs(value) > _ENERGY_CEILING_KEV:
@@ -274,11 +301,13 @@ def inconsistencies(
 
     for state, residual, sigma in closure_failures(states):
         ratio = f"{residual / sigma:.0f}" if sigma else "inf"
-        flagged.append((
-            state,
-            f"mass-surface loop misses closure by {residual:.0f} keV "
-            f"({ratio} sigma); one of S(n) or Q(beta-) nearby is wrong",
-        ))
+        flagged.append(
+            (
+                state,
+                f"mass-surface loop misses closure by {residual:.0f} keV "
+                f"({ratio} sigma); one of S(n) or Q(beta-) nearby is wrong",
+            )
+        )
     return flagged
 
 
@@ -306,9 +335,7 @@ class Loop:
 
     @property
     def closed(self) -> bool:
-        return self.residual <= max(
-            _CLOSURE_SIGMA * self.sigma, _CLOSURE_FLOOR_KEV
-        )
+        return self.residual <= max(_CLOSURE_SIGMA * self.sigma, _CLOSURE_FLOOR_KEV)
 
 
 def _quad(*values) -> float:
@@ -352,24 +379,35 @@ def mass_surface_loops(
         z, a = key
         above, lighter = table.get((z + 1, a)), table.get((z, a - 1))
         if (
-            above is not None and lighter is not None
+            above is not None
+            and lighter is not None
             and not any("s_n" in r.estimated for r in (state, above))
             and not any("q_beta_minus" in r.estimated for r in (lighter, state))
-            and None not in (state.s_n, above.s_n,
-                             lighter.q_beta_minus, state.q_beta_minus)
+            and None
+            not in (state.s_n, above.s_n, lighter.q_beta_minus, state.q_beta_minus)
         ):
-            loops.append(Loop(
-                name="neutron surface",
-                anchor=state,
-                residual=abs((state.s_n - above.s_n)
-                             - (lighter.q_beta_minus - state.q_beta_minus)),
-                sigma=_quad(state.s_n_unc, above.s_n_unc,
-                            lighter.q_beta_minus_unc, state.q_beta_minus_unc),
-                terms=(
-                    (key, "s_n"), ((z + 1, a), "s_n"),
-                    ((z, a - 1), "q_beta_minus"), (key, "q_beta_minus"),
-                ),
-            ))
+            loops.append(
+                Loop(
+                    name="neutron surface",
+                    anchor=state,
+                    residual=abs(
+                        (state.s_n - above.s_n)
+                        - (lighter.q_beta_minus - state.q_beta_minus)
+                    ),
+                    sigma=_quad(
+                        state.s_n_unc,
+                        above.s_n_unc,
+                        lighter.q_beta_minus_unc,
+                        state.q_beta_minus_unc,
+                    ),
+                    terms=(
+                        (key, "s_n"),
+                        ((z + 1, a), "s_n"),
+                        ((z, a - 1), "q_beta_minus"),
+                        (key, "q_beta_minus"),
+                    ),
+                )
+            )
 
         diagonal = table.get((z - 1, a - 1))
         if (
@@ -378,19 +416,23 @@ def mass_surface_loops(
             and "q_beta_minus" not in diagonal.estimated
             and None not in (state.s_p, state.s_n, diagonal.q_beta_minus)
         ):
-            loops.append(Loop(
-                name="proton surface",
-                anchor=state,
-                residual=abs(
-                    (state.s_p - state.s_n) - diagonal.q_beta_minus
-                    - (_HYDROGEN_EXCESS_KEV - _NEUTRON_EXCESS_KEV)
-                ),
-                sigma=_quad(state.s_n_unc, diagonal.q_beta_minus_unc),
-                terms=(
-                    (key, "s_p"), (key, "s_n"),
-                    ((z - 1, a - 1), "q_beta_minus"),
-                ),
-            ))
+            loops.append(
+                Loop(
+                    name="proton surface",
+                    anchor=state,
+                    residual=abs(
+                        (state.s_p - state.s_n)
+                        - diagonal.q_beta_minus
+                        - (_HYDROGEN_EXCESS_KEV - _NEUTRON_EXCESS_KEV)
+                    ),
+                    sigma=_quad(state.s_n_unc, diagonal.q_beta_minus_unc),
+                    terms=(
+                        (key, "s_p"),
+                        (key, "s_n"),
+                        ((z - 1, a - 1), "q_beta_minus"),
+                    ),
+                )
+            )
     return loops
 
 
