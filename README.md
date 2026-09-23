@@ -1,5 +1,7 @@
 # nook
 
+[beykyle.github.io/nook/](https://beykyle.github.io/nook/)
+
 A nook for nuclear structure data: level schemes from ENSDF and RIPL-3, with
 the awkward parts — significant-digit uncertainties, spin-parity alternatives,
 widths masquerading as half-lives, Fortran fixed-format files — parsed into
